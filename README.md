@@ -9,7 +9,11 @@
 ## Foreign-API
 
 * ValidateToken(Token) -> UserID
+* DestroyToken(Token) -> bool
 * GetUser(Token, UserID) -> UserData
-* IsAdmin(Token, UserID) -> bool
-* IsSuperUser(Token, UserID) -> bool
 * GetGroupUsers(Token, GroupID) -> [UserID]
+
+### UserData (JSON)
+* UserID: String
+* Name: String
+* Permissions: Integer (0 - normal, 1 - admin, 2 - super)

@@ -18,3 +18,4 @@ dotenv = "0.15.0"
 serde = "1"
 tokio = { version = "0.3.3", features = ["time", "sync", "stream"] }
 futures-core = "0.3"
+toml = "0.5.7"
