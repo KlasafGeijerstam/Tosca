@@ -4,9 +4,7 @@ use std::fs;
 use std::path::PathBuf;
 
 use actix_cors::Cors;
-use actix_web::{
-    get, web, App, HttpResponse, HttpServer,
-};
+use actix_web::{get, web, App, HttpResponse, HttpServer};
 
 #[derive(Deserialize)]
 struct Config {
@@ -15,6 +13,13 @@ struct Config {
 
 #[derive(Deserialize, Serialize, Clone)]
 struct User {
+    name: String,
+    permissions: u8,
+}
+
+#[derive(Deserialize, Serialize, Clone, Debug)]
+struct UserWithID {
+    uid: String,
     name: String,
     permissions: u8,
 }
@@ -36,14 +41,29 @@ async fn main() -> std::io::Result<()> {
         String::from_utf8(fs::read(file_path)?).expect("Config file does not contain valid utf8");
 
     let config: Config = toml::from_str(&data)?;
-    
+
+    let users: HashMap<_, _> = config
+        .users
+        .iter()
+        .map(|(k, u)| {
+            (
+                k.clone(),
+                UserWithID {
+                    uid: k.clone(),
+                    name: u.name.clone(),
+                    permissions: u.permissions,
+                },
+            )
+        })
+        .collect();
+
     println!("Loaded {} users", config.users.len());
-    for (id, user) in &config.users {
-        println!("    ID: {}, Name: {}, Permissions: {}", id, user.name, user.permissions);
+    for user in users.values() {
+        println!("{:?}", user);
     }
     println!();
 
-    let users = web::Data::new(config.users);
+    let users: Users = web::Data::new(users);
 
     let groups: Groups = web::Data::new(HashMap::new());
 
@@ -70,7 +90,7 @@ async fn main() -> std::io::Result<()> {
 }
 
 type Groups = web::Data<HashMap<String, Group>>;
-type Users = web::Data<HashMap<String, User>>;
+type Users = web::Data<HashMap<String, UserWithID>>;
 type Token = web::Path<String>;
 type UserID = Token;
 type GroupID = Token;
@@ -101,7 +121,7 @@ async fn destroy_token(_token: Token) -> HttpResponse {
 #[get("/{token}/users/{userid}")]
 async fn get_user_data(token: Token, uid: UserID, users: Users) -> HttpResponse {
     if !check_token(&token, &users) {
-        return HttpResponse::Unauthorized().finish()
+        return HttpResponse::Unauthorized().finish();
     }
 
     if let Some(user) = users.get(&*uid) {
@@ -114,7 +134,7 @@ async fn get_user_data(token: Token, uid: UserID, users: Users) -> HttpResponse 
 #[get("/{token}/group/{group}/")]
 async fn get_group_users(token: Token, gid: GroupID, groups: Groups, users: Users) -> HttpResponse {
     if !check_token(&token, &users) {
-        return HttpResponse::Unauthorized().finish()
+        return HttpResponse::Unauthorized().finish();
     }
 
     if let Some(group) = groups.get(&*gid) {

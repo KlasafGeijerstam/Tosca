@@ -8,8 +8,8 @@
 
 ## Foreign-API
 
-* ValidateToken(Token) -> UserID
-* DestroyToken(Token) -> bool
+* ValidateToken(Token) -> UserData
+* DestroyToken(Token) -> ()
 * GetUser(Token, UserID) -> UserData
 * GetGroupUsers(Token, GroupID) -> [UserID]
 
