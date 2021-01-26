@@ -1,0 +1,15 @@
+# Public host of login server
+public_host = ""
+port = 25674
+
+# SSL Configuration for RusTLS
+certificate_file = "cert.pem"
+key_file = "key.pem"
+
+discovery_server = "https://accounts.google.com/.well-known/openid-configuration"
+client_id = ""
+client_secret = ""
+
+# Clients are redirected here after successful login
+# Payload: ?token=token_value&exp=123
+client_endpoint = "https://tosca.com/after_login"
