@@ -1,78 +1,77 @@
 -- Your SQL goes here
--- `group` is reserved
-CREATE TABLE group_table (
-    gid INT GENERATED ALWAYS AS IDENTITY,
+CREATE TABLE workspace (
+    workspace_id INT GENERATED ALWAYS AS IDENTITY,
     creator TEXT NOT NULL,
     name TEXT NOT NULL,
     info TEXT,
-    PRIMARY KEY (gid)
+    PRIMARY KEY (workspace_id)
 );
 
 CREATE TABLE whitelist (
-    gid INT NOT NULL,
-    uid TEXT NOT NULL,
-    PRIMARY KEY (gid, uid),
-    FOREIGN KEY(gid) REFERENCES group_table(gid)
+    workspace_id INT NOT NULL,
+    user_id TEXT NOT NULL,
+    PRIMARY KEY (workspace_id, user_id),
+    FOREIGN KEY(workspace_id) REFERENCES workspace(workspace_id)
 );
 
 CREATE TABLE moderator (
-    gid INT NOT NULL,
-    uid TEXT NOT NULL,
-    PRIMARY KEY (gid, uid),
-    FOREIGN KEY(gid) REFERENCES group_table(gid)
+    workspace_id INT NOT NULL,
+    user_id TEXT NOT NULL,
+    PRIMARY KEY (workspace_id, user_id),
+    FOREIGN KEY(workspace_id) REFERENCES workspace(workspace_id)
 );
 
 CREATE TABLE queue (
-    qid INT GENERATED ALWAYS AS IDENTITY,
-    gid INT NOT NULL,
+    queue_id INT GENERATED ALWAYS AS IDENTITY,
+    workspace_id INT NOT NULL,
     name TEXT NOT NULL,
     info TEXT,
-    PRIMARY KEY (qid),
-    FOREIGN KEY(gid) REFERENCES group_table(gid)
+    PRIMARY KEY (queue_id),
+    FOREIGN KEY(workspace_id) REFERENCES workspace(workspace_id)
 );
 
 CREATE TABLE queue_slot (
-    qsid INT GENERATED ALWAYS AS IDENTITY,
-    qid INT NOT NULL,
+    queue_slot_id INT GENERATED ALWAYS AS IDENTITY,
+    queue_id INT NOT NULL,
     start_time TIMESTAMP NOT NULL,
     duration INT NOT NULL,
     open_before INT NOT NULL,
-    PRIMARY KEY (qsid),
-    FOREIGN KEY(qid) REFERENCES queue(qid)
+    PRIMARY KEY (queue_slot_id),
+    FOREIGN KEY(queue_id) REFERENCES queue(queue_id)
 );
 
 CREATE TABLE queue_slot_user (
-    qsid INT NOT NULL,
-    uid TEXT NOT NULL,
+    queue_slot_id INT NOT NULL,
+    user_id TEXT NOT NULL,
     message TEXT,
     moderator_message TEXT,
-    PRIMARY KEY(qsid, uid),
-    FOREIGN KEY(qsid) REFERENCES queue_slot(qsid)
+    PRIMARY KEY(queue_slot_id, user_id),
+    FOREIGN KEY(queue_slot_id) REFERENCES queue_slot(queue_slot_id)
 );
 
 CREATE TABLE signup (
-    sid INT GENERATED ALWAYS AS IDENTITY,
-    gid INT NOT NULL,
+    signup_id INT GENERATED ALWAYS AS IDENTITY,
+    workspace_id INT NOT NULL,
     max_slot_signup INT NOT NULL,
     name TEXT NOT NULL,
     info TEXT,
-    PRIMARY KEY(sid),
-    FOREIGN KEY(gid) REFERENCES group_table(gid)
+    PRIMARY KEY(signup_id),
+    FOREIGN KEY(workspace_id) REFERENCES workspace(workspace_id)
 );
 
 CREATE TABLE signup_slot (
-    ssid INT GENERATED ALWAYS AS IDENTITY,
-    sid INT NOT NULL,
+    signup_slot_id INT GENERATED ALWAYS AS IDENTITY,
+    signup_id INT NOT NULL,
     info TEXT,
     time TIMESTAMP,
     max_users INT NOT NULL,
-    PRIMARY KEY(ssid),
-    FOREIGN KEY(sid) REFERENCES signup(sid)
+    PRIMARY KEY(signup_slot_id),
+    FOREIGN KEY(signup_id) REFERENCES signup(signup_id)
 );
 
 CREATE TABLE signup_slot_user (
-    ssid INT NOT NULL,
-    uid TEXT NOT NULL,
-    PRIMARY KEY (ssid, uid),
-    FOREIGN KEY (ssid) REFERENCES signup_slot(ssid)
+    signup_slot_id INT NOT NULL,
+    user_id TEXT NOT NULL,
+    PRIMARY KEY (signup_slot_id, user_id),
+    FOREIGN KEY (signup_slot_id) REFERENCES signup_slot(signup_slot_id)
 );

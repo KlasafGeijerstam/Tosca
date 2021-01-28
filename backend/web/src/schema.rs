@@ -1,32 +1,23 @@
 table! {
-    group_table (gid) {
-        gid -> Int4,
-        creator -> Text,
+    moderator (workspace_id, user_id) {
+        workspace_id -> Int4,
+        user_id -> Text,
+    }
+}
+
+table! {
+    queue (queue_id) {
+        queue_id -> Int4,
+        workspace_id -> Int4,
         name -> Text,
         info -> Nullable<Text>,
     }
 }
 
 table! {
-    moderator (gid, uid) {
-        gid -> Int4,
-        uid -> Text,
-    }
-}
-
-table! {
-    queue (qid) {
-        qid -> Int4,
-        gid -> Int4,
-        name -> Text,
-        info -> Nullable<Text>,
-    }
-}
-
-table! {
-    queue_slot (qsid) {
-        qsid -> Int4,
-        qid -> Int4,
+    queue_slot (queue_slot_id) {
+        queue_slot_id -> Int4,
+        queue_id -> Int4,
         start_time -> Timestamp,
         duration -> Int4,
         open_before -> Int4,
@@ -34,18 +25,18 @@ table! {
 }
 
 table! {
-    queue_slot_user (qsid, uid) {
-        qsid -> Int4,
-        uid -> Text,
+    queue_slot_user (queue_slot_id, user_id) {
+        queue_slot_id -> Int4,
+        user_id -> Text,
         message -> Nullable<Text>,
         moderator_message -> Nullable<Text>,
     }
 }
 
 table! {
-    signup (sid) {
-        sid -> Int4,
-        gid -> Int4,
+    signup (signup_id) {
+        signup_id -> Int4,
+        workspace_id -> Int4,
         max_slot_signup -> Int4,
         name -> Text,
         info -> Nullable<Text>,
@@ -53,9 +44,9 @@ table! {
 }
 
 table! {
-    signup_slot (ssid) {
-        ssid -> Int4,
-        sid -> Int4,
+    signup_slot (signup_slot_id) {
+        signup_slot_id -> Int4,
+        signup_id -> Int4,
         info -> Nullable<Text>,
         time -> Nullable<Timestamp>,
         max_users -> Int4,
@@ -63,30 +54,38 @@ table! {
 }
 
 table! {
-    signup_slot_user (ssid, uid) {
-        ssid -> Int4,
-        uid -> Text,
+    signup_slot_user (signup_slot_id, user_id) {
+        signup_slot_id -> Int4,
+        user_id -> Text,
     }
 }
 
 table! {
-    whitelist (gid, uid) {
-        gid -> Int4,
-        uid -> Text,
+    whitelist (workspace_id, user_id) {
+        workspace_id -> Int4,
+        user_id -> Text,
     }
 }
 
-joinable!(moderator -> group_table (gid));
-joinable!(queue -> group_table (gid));
-joinable!(queue_slot -> queue (qid));
-joinable!(queue_slot_user -> queue_slot (qsid));
-joinable!(signup -> group_table (gid));
-joinable!(signup_slot -> signup (sid));
-joinable!(signup_slot_user -> signup_slot (ssid));
-joinable!(whitelist -> group_table (gid));
+table! {
+    workspace (workspace_id) {
+        workspace_id -> Int4,
+        creator -> Text,
+        name -> Text,
+        info -> Nullable<Text>,
+    }
+}
+
+joinable!(moderator -> workspace (workspace_id));
+joinable!(queue -> workspace (workspace_id));
+joinable!(queue_slot -> queue (queue_id));
+joinable!(queue_slot_user -> queue_slot (queue_slot_id));
+joinable!(signup -> workspace (workspace_id));
+joinable!(signup_slot -> signup (signup_id));
+joinable!(signup_slot_user -> signup_slot (signup_slot_id));
+joinable!(whitelist -> workspace (workspace_id));
 
 allow_tables_to_appear_in_same_query!(
-    group_table,
     moderator,
     queue,
     queue_slot,
@@ -95,4 +94,5 @@ allow_tables_to_appear_in_same_query!(
     signup_slot,
     signup_slot_user,
     whitelist,
+    workspace,
 );

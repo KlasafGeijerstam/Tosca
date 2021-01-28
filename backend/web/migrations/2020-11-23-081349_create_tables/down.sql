@@ -1,5 +1,5 @@
 -- This file should undo anything in `up.sql`
-DROP TABLE group_table CASCADE;
+DROP TABLE workspace CASCADE;
 DROP TABLE whitelist CASCADE;
 DROP TABLE moderator CASCADE;
 DROP TABLE queue CASCADE;
