@@ -5,15 +5,3 @@
 ## Schema
 
 ![Database structure](util/database_diagram.png)
-
-## Foreign-API
-
-* ValidateToken(Token) -> UserData
-* DestroyToken(Token) -> ()
-* GetUser(Token, UserID) -> UserData
-* GetGroupUsers(Token, GroupID) -> [UserID]
-
-### UserData (JSON)
-* UserID: String
-* Name: String
-* Permissions: Integer (0 - normal, 1 - admin, 2 - super)
