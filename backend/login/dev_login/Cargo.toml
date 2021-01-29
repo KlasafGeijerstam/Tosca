@@ -1,0 +1,17 @@
+[package]
+name = "dev_login"
+version = "0.1.0"
+authors = ["Klas af Geijerstam <klasafgeijerstam@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = "4.0.0-beta.1"
+serde = "1.0"
+structopt = "0.3"
+actix-files = "0.6.0-beta.1"
+
+[dependencies.reqwest]
+version = "0.11"
+default-features = false
