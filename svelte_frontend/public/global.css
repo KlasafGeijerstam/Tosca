@@ -78,6 +78,23 @@ img:not([alt]) {
   }
 }
 
+@font-face {
+    font-family: montserrat;
+    src: url('fonts/montserrat/Montserrat-Regular.ttf');
+}
+
+@font-face {
+    font-family: montserrat;
+    src: url('fonts/montserrat/Montserrat-Bold.ttf');
+    font-weight: bold;
+}
+
+* {
+    font-family: montserrat;
+    font-weight: normal;
+}
+
 :root {
     --background-dark: #104F55;
+     
 }
