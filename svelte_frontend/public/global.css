@@ -96,5 +96,6 @@ img:not([alt]) {
 
 :root {
     --background-dark: #104F55;
-     
+    --dark-gray: #E0E0E0;
+    --background-light: #21858E;
 }

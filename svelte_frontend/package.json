@@ -24,6 +24,8 @@
     "@tsconfig/svelte": "^1.0.0"
   },
   "dependencies": {
-    "sirv-cli": "^1.0.0"
+    "@tabler/icons": "^1.39.1",
+    "sirv-cli": "^1.0.0",
+    "tabler-icons-svelte": "^1.5.0"
   }
 }
