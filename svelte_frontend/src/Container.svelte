@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ItemList from "./ItemList.svelte";
+  import WorkspacesList from "./WorkspacesList.svelte";
   export let title: string;
 </script>
 

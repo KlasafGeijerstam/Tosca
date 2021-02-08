@@ -1,11 +1,21 @@
 <script lang="ts">
   import { Pencil, Trash, ClipboardList } from "tabler-icons-svelte";
+  import { createEventDispatcher } from 'svelte';
 
   export let courseName: string;
   export let courseText: string;
+
+  const dispatch = createEventDispatcher();
+
+  function test() {
+    dispatch('onClick', {
+      text: courseName
+    });
+  }
+
 </script>
 
-<item>
+<item on:click={test}>
   <info>
     <h2>{courseName}</h2>
     <p>{courseText}</p>

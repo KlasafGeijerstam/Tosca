@@ -34,4 +34,8 @@
     input {
       width: 100%;
     }
+
+    h4 {
+      font-weight: bold;
+    }
 </style>
