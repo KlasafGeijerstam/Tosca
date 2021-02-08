@@ -5,7 +5,6 @@
 
   function handleClick(event) {
     alert(event.detail.text);
-    //window.location.assign('https://developer.mozilla.org/en-US/docs/Web/API/Location/reload');
   }
 
 </script>

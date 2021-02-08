@@ -3,18 +3,29 @@
   import Container from "./Container.svelte";
   import WorkspacesList from "./WorkspacesList.svelte";
   import Information from "./Information.svelte";
+  import {fly} from 'svelte/transition';
+import { onMount } from "svelte";
+
+  let visible: boolean = false;
+
+  onMount(() => {
+    setTimeout(() => visible = true, 1000);
+  });
+
 </script>
 
 <main>
   <Titlebar username="Kuba" />
-  <test>
-    <Container title="Information">
+  {#if visible}
+  <test in:fly="{{y: 200, duration: 1400}}">
+    <Container  title="Information">
       <Information />
     </Container>
     <Container title="Workspaces">
       <WorkspacesList />
     </Container>
   </test>
+  {/if}
 </main>
 
 
@@ -26,8 +37,4 @@
     margin-right: auto;
   }
 
-
-  Container {
-    max-width: 64rem;
-  }
 </style>
