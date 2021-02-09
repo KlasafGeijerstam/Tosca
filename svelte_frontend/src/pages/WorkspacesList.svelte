@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Item from "./Item.svelte";
-  import { Plus } from "tabler-icons-svelte";
+   import Item from "./Item.svelte";
+    import { Plus } from "tabler-icons-svelte";
 
 
   function handleClick(event) {
