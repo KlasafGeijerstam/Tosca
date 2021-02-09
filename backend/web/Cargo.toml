@@ -1,21 +1,6 @@
-[package]
-name = "tosca_backend"
-version = "0.1.0"
-authors = ["Klas af Geijerstam <klasafgeijerstam@gmail.com>"]
-edition = "2018"
+[workspace]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-actix = "0.10.0"
-actix-web = "3"
-actix-files = "0.4.0"
-actix-rt = "1.1.1"
-actix-cors = "0.5"
-actix-web-actors = "3.0.0"
-diesel = { version = "1", features = ["postgres"] }
-dotenv = "0.15.0"
-serde = "1"
-tokio = { version = "0.3.3", features = ["time", "sync", "stream"] }
-futures-core = "0.3"
-toml = "0.5.7"
+members = [ 
+    "db_connector",
+    "web_backend",
+]

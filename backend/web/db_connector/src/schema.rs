@@ -10,7 +10,7 @@ table! {
         queue_id -> Int4,
         workspace_id -> Int4,
         name -> Text,
-        info -> Nullable<Text>,
+        info -> Text,
     }
 }
 
@@ -28,8 +28,8 @@ table! {
     queue_slot_user (queue_slot_id, user_id) {
         queue_slot_id -> Int4,
         user_id -> Text,
-        message -> Nullable<Text>,
-        moderator_message -> Nullable<Text>,
+        message -> Text,
+        moderator_message -> Text,
     }
 }
 
@@ -39,7 +39,7 @@ table! {
         workspace_id -> Int4,
         max_slot_signup -> Int4,
         name -> Text,
-        info -> Nullable<Text>,
+        info -> Text,
     }
 }
 
@@ -47,7 +47,7 @@ table! {
     signup_slot (signup_slot_id) {
         signup_slot_id -> Int4,
         signup_id -> Int4,
-        info -> Nullable<Text>,
+        info -> Text,
         time -> Nullable<Timestamp>,
         max_users -> Int4,
     }
@@ -72,7 +72,7 @@ table! {
         workspace_id -> Int4,
         creator -> Text,
         name -> Text,
-        info -> Nullable<Text>,
+        info -> Text,
     }
 }
 
