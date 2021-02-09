@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Item from "./Item.svelte";
+  import Item from "../../Item.svelte";
   import { Plus } from "tabler-icons-svelte";
 </script>
 
