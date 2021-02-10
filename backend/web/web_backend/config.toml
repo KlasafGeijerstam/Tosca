@@ -1,0 +1,10 @@
+# Public host of login server
+public_host = ""
+port = 25674
+
+# SSL Configuration for RusTLS
+certificate_file = "res/cert.pem"
+key_file = "res/key.pem"
+
+login_provider = ""
+user_provider = ""

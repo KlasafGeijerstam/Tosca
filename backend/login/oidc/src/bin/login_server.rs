@@ -5,7 +5,7 @@ use rustls::{NoClientAuth, ServerConfig};
 use std::fs::File;
 use std::io::BufReader;
 
-use openidtest::{Config, OpenIDCallbackInfo, OpenIDProvider};
+use tosca_openid_provider::{Config, OpenIDCallbackInfo, OpenIDProvider};
 use serde::{Deserialize, Serialize};
 use structopt::StructOpt;
 
