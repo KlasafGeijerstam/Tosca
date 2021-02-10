@@ -1,0 +1,6 @@
+#!/bin/bash
+if [ ! -d res ]; then
+    mkdir res
+fi
+openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout res/key.pem -out res/cert.pem
+echo "Genererated key and certificate to res/key.pem res/cert.pem"
