@@ -1,46 +1,67 @@
-# Getting Started with Create React App
+# routify-starter
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Starter template for [Routify](https://github.com/sveltech/routify).
 
-## Available Scripts
+### Get started
 
-In the project directory, you can run:
+#### Starter templates
+| Template                                  | Description                                                 |
+|-------------------------------------------|-------------------------------------------------------------|
+| [master](https://example.routify.dev/)    | Default template, includes examples folder                  |
+| [blog](https://blog-example.routify.dev/) | Generates a blog from local markdown posts. Includes mdsvex |
+| [auth](https://auth-example.routify.dev/) | Embedded login on protected pages. Includes Auth0           |
 
-### `yarn start`
+To use a template, run:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+`npx @sveltech/routify init`
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+or
 
-### `yarn test`
+`npx @sveltech/routify init --branch <branch-name>`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The above commands will populate the current directory, they don't create a new one.
 
-### `yarn build`
+### npm scripts
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Syntax           | Description                                                                       |
+|------------------|-----------------------------------------------------------------------------------|
+| `dev`            | Development (port 5000)                                                           |
+| `dev:nollup`     | Development with crazy fast rebuilds (port 5000)                                  |
+| `dev-dynamic`    | Development with dynamic imports                                                  |
+| `build`          | Build a bundled app with SSR + prerendering and dynamic imports                   |
+| `serve`          | Run after a build to preview. Serves SPA on 5000 and SSR on 5005                  |
+| `deploy:*`       | Deploy to netlify or now                                                          |
+| `export`         | Create static pages from content in dist folder (used by `npm run build`)         |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### SSR and pre-rendering
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+SSR and pre-rendering are included in the default build process.
 
-### `yarn eject`
+`npm run deploy:(now|netlify)` will deploy the app with SSR and prerendering included.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+To render async data, call the `$ready()` helper whenever your data is ready.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+If $ready() is present, rendering will be delayed till the function has been called.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Otherwise it will be rendered instantly.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+See [src/pages/example/api/[showId].svelte](https://github.com/sveltech/routify-starter/blob/master/src/pages/example/api/%5BshowId%5D.svelte) for an example.
 
-## Learn More
+### Production
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+* For SPA or SSR apps please make sure that url rewrite is enabled on the server.
+* For SPA redirect to `__app.html`.
+* For SSR redirect to the lambda function or express server.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Typescript
+
+For Typescript, we recommend [@lamualfa](https://github.com/lamualfa) excellent [routify-ts](https://github.com/lamualfa/routify-ts/)
+
+New project: `npx routify-ts init <project-name> [routify-init-args]`
+
+Existing project: `npx routify-ts convert [project-directory]`
+
+
+### Issues?
+
+File on Github! See https://github.com/sveltech/routify/issues .
