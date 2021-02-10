@@ -1,5 +1,4 @@
 <script lang="ts">
-  import WorkspacesList from "./WorkspacesList.svelte";
   export let title: string;
 </script>
 

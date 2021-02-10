@@ -1,23 +1,33 @@
 <script lang="ts">
   import { Plus } from "tabler-icons-svelte";
+  
+  export let workspace_id: string;
+  export let name: string;
+  export let info: string;
+
+  export let moderators;
+
+  export let creator;
 </script>
 
 <div>
   <info>
       <h4>Name:</h4> 
-        <p>Intro</p>
-      <h4>Info:</h4> 
-        <p>bla bla</p>
+        <p>{name}</p>
+      <h4>Creator:</h4> 
+        <p>{creator.user_id}</p>
+      <h4>Information:</h4> 
+        <p>{info}</p>
       <h4>Workspace ID:</h4> 
-        <p>1337</p>
+        <p>{workspace_id}</p>
     </info>
 
   <moderators>
     <h4>Moderators:</h4>
     <ul>
-      <li>Jerry</li>
-      <li>Klas</li>
-      <li>Kuba</li>
+      {#each moderators as { user_id, name }}
+        <li>{user_id} - {name}</li>
+      {/each}
     </ul>
     <input type="text" placeholder="user id..">
   </moderators>
