@@ -9,8 +9,15 @@ diesel --config-file db_connector/diesel.toml migration --migration-dir db_conne
 printf "[Migrations] DONE!\n"
 
 # Start backend
-printf "[Backend] Starting..\n"
 pushd web_backend
+printf "[Backend] Building\n"
+cargo build
+if (( $? != 0 )); then
+	printf "Cargo build failure!\n"
+	exit 1
+fi
+
+printf "[Backend] Starting\n"
 cargo run config.toml &
 backend_pid=$!
 popd
