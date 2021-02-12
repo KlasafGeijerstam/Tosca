@@ -7,7 +7,7 @@ use std::io::BufReader;
 
 use serde::{Deserialize, Serialize};
 use structopt::StructOpt;
-use web_backend::user_provider::{UserData, UserProvider, Admin};
+use web_backend::user_provider::{UserData, UserProvider, SuperUser, AdminUser, NormalUser };
 
 #[derive(StructOpt)]
 #[structopt(name = "Tosca REST-backend")]
@@ -49,9 +49,18 @@ fn load_ssl_keys(config: &Config) -> ServerConfig {
     cfg
 }
 
+#[get("/super")]
+async fn super_user(user: UserData<SuperUser>) -> impl Responder {
+    HttpResponse::Ok().body(format!("Hello! {}", user.token))
+}
 
-#[get("/")]
-async fn test(user: UserData<Admin>) -> impl Responder {
+#[get("/normal")]
+async fn normal_user(user: UserData<NormalUser>) -> impl Responder {
+    HttpResponse::Ok().body(format!("Hello! {}", user.token))
+}
+
+#[get("/admin")]
+async fn admin_user(user: UserData<AdminUser>) -> impl Responder {
     HttpResponse::Ok().body(format!("Hello! {}", user.token))
 }
 
@@ -81,12 +90,14 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-            .wrap(middleware::NormalizePath::default())
+            .wrap(middleware::NormalizePath::new(middleware::normalize::TrailingSlash::Trim))
             .wrap(middleware::Logger::default())
             .data(db_pool.clone())
             .app_data(provider.clone())
             .service(web::scope("/api").configure(api::workspace::configure))
-            .service(test)
+            .service(super_user)
+            .service(normal_user)
+            .service(admin_user)
     })
     .bind_rustls(("0.0.0.0", config.port), cfg)?
     .run()
