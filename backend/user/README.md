@@ -19,9 +19,8 @@ Returns: A JSON object containing at least the following properties:
   "last_name": "Testsson",
   "user_level": 0,
   "workspaces": [
-     {
-        "workspace_id": "workspace1",
-     },
+    "workspace_id1",
+    "workspace_id2"
   ],
       
 }
