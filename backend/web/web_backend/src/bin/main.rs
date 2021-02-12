@@ -1,4 +1,4 @@
-use actix_web::{get, web, App, HttpResponse, HttpServer, Responder, middleware};
+use actix_web::{get, middleware, web, App, HttpResponse, HttpServer, Responder};
 use anyhow::{anyhow, Result};
 use rustls::internal::pemfile::{certs, pkcs8_private_keys};
 use rustls::{NoClientAuth, ServerConfig};
@@ -7,12 +7,17 @@ use std::io::BufReader;
 
 use serde::{Deserialize, Serialize};
 use structopt::StructOpt;
+use web_backend::user_provider::{UserData, UserProvider, Admin};
 
 #[derive(StructOpt)]
 #[structopt(name = "Tosca REST-backend")]
 struct Arguments {
     /// The config file (in TOML format)
     config_file: String,
+
+    /// Toggles debug mode.
+    #[structopt(long)]
+    debug: bool,
 }
 
 #[derive(Deserialize)]
@@ -44,13 +49,14 @@ fn load_ssl_keys(config: &Config) -> ServerConfig {
     cfg
 }
 
+
 #[get("/")]
-async fn test() -> impl Responder {
-    HttpResponse::Ok().body("Hello!")
+async fn test(user: UserData<Admin>) -> impl Responder {
+    HttpResponse::Ok().body(format!("Hello! {}", user.token))
 }
 
-use web_backend::api;
 use db_connector::create_db_pool_env;
+use web_backend::api;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -66,13 +72,19 @@ async fn main() -> std::io::Result<()> {
         .map_err(|e| panic!("Failed to create db pool: {:?}", e))
         .unwrap();
 
-    println!("Tosca REST-backend listening on https://localhost:{}", config.port);
+    let provider = web::Data::new(UserProvider {});
+
+    println!(
+        "Tosca REST-backend listening on https://localhost:{}",
+        config.port
+    );
 
     HttpServer::new(move || {
         App::new()
             .wrap(middleware::NormalizePath::default())
             .wrap(middleware::Logger::default())
             .data(db_pool.clone())
+            .app_data(provider.clone())
             .service(web::scope("/api").configure(api::workspace::configure))
             .service(test)
     })
