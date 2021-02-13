@@ -14,7 +14,6 @@ All REST-operations must supply a session token as a http bearer token.
 * POST `/workspaces/{workspace_id}/whitelist` [Super, Creator, Moderator]
 * DELETE `/workspaces/{workspace_id}/whitelist/{user_id}` [Super, Creator, Moderator]
 
-
 ## Starting the Tosca web-backend
 
 Tosca web-backend requires three auxiliary services to be started before
@@ -48,6 +47,12 @@ The database connection for the web-backend can be configured in two ways.
    takes a connection-url of the following format: `postgres://{user}:{password}@{host}:{port}/{database}`
 
 
+### Certification 
+
+The script `generate_certificate` needs to be run before the backend is started the first
+time to generate the https certificate.
+
+
 ### Sample startup
 1. Start the database.
     * Enter the database connection information into the configuration file. OR
@@ -68,3 +73,4 @@ The database connection for the web-backend can be configured in two ways.
     * Else (you created a connection-url for the database)
         * Run `cargo run -- config.toml --database {connection-url}`
 5. You should now be able to access the REST-API on the configured port.
+
