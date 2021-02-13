@@ -5,6 +5,9 @@ use anyhow::bail;
 use futures_util::future::{err, ok, Ready};
 use reqwest::Client;
 use std::marker::PhantomData;
+use std::pin::Pin;
+use futures::Future;
+use crate::login_provider::LoginProvider;
 
 pub struct UserData<L: UserLevel> {
     phantom_level: PhantomData<L>,
@@ -40,20 +43,22 @@ impl UserProvider {
             api_host: api_host.into(),
         }
     }
-
-    fn get_user<L: UserLevel>(&self, user_id: &str) -> anyhow::Result<UserData<L>> {
+    
+    /// Gets UserData for a user_id. Returns `Err` if the user does not exist,
+    /// or if the user associated with the user_id lacks permissions (greater permission value) (`L`).
+    async fn get_user<L: UserLevel>(&self, user_id: &str) -> anyhow::Result<UserData<L>> {
         let RemoteUser {
             first_name,
             last_name,
             user_level,
             workspaces,
-        } = self.get_user_from_provider(user_id);
+        } = self.get_user_from_provider(user_id).await?;
 
         let required_level = L::new();
 
         if user_level > required_level.level() {
             bail!(
-                "User is missing permissions. Required: {}, actual: {}",
+                "User lacks permissions. Required: {}, actual: {}",
                 required_level.level(),
                 user_level
             );
@@ -71,25 +76,27 @@ impl UserProvider {
 
     /// TODO: Make UserProvider actually use a configured user provider to fetch data
     /// TODO: Cache lookups to user provider
-    fn get_user_from_provider(&self, user_id: &str) -> RemoteUser {
+    async fn get_user_from_provider(&self, user_id: &str) -> anyhow::Result<RemoteUser> {
         self.client
-            .get(format!("{}/users/{}", self.api_host, user_id));
+            .get(&format!("{}/users/{}", self.api_host, user_id));
 
         //TODO FIX below
         let level = if user_id == "super" {
             0
         } else if user_id == "admin" {
             1
-        } else {
+        } else if user_id == "normal" {
             2
+        } else {
+            bail!("User {} does not exist", user_id)
         };
 
-        RemoteUser {
+        Ok(RemoteUser {
             first_name: "Test".into(),
             last_name: "Testsson".into(),
             user_level: level,
             workspaces: vec!["workspace1".into(), "workspace2".into()],
-        }
+        })
     }
 }
 
@@ -101,26 +108,39 @@ where
     L: UserLevel,
 {
     type Error = Error;
-    type Future = Ready<Result<Self, Self::Error>>;
+    type Future = Pin<Box<dyn Future<Output = Result<Self, Self::Error>>>>;
     type Config = ();
 
     fn from_request(req: &HttpRequest, _: &mut actix_web::dev::Payload) -> Self::Future {
         match Authorization::<Bearer>::parse(req) {
             Ok(header) => {
                 let header = header.into_scheme();
-                let token = header.token();
+                let token = header.token().to_owned();
 
-                // TODO convert token to user_id via LoginProvider app-data
-                let provider = req
+                let login_provider = req
+                    .app_data::<web::Data<LoginProvider>>()
+                    .expect("No LoginProvider configured")
+                    .clone();
+
+                let user_provider = req
                     .app_data::<web::Data<UserProvider>>()
-                    .expect("No UserProvider configured");
+                    .expect("No UserProvider configured")
+                    .clone();
 
-                match provider.get_user(token) {
-                    Ok(user) => ok(user),
-                    Err(error) => err(ErrorUnauthorized(format!("Unauthorized: {:?}", error))),
-                }
+                Box::pin(async move {
+                    // TODO: use `login_provider` to exchange `token` for `user_id`
+
+                    match user_provider.get_user(&token).await {
+                        Ok(user) => Ok(user),
+                        Err(error) => Err(ErrorUnauthorized(format!("Unauthorized: {:?}", error))),
+                    }
+                })
+            },
+            Err(error) => {
+                Box::pin(async move {
+                    Err(ErrorUnauthorized(format!("Unauthorized: {:?}", error)))
+                })
             }
-            Err(error) => err(ErrorUnauthorized(format!("Unauthorized: {:?}", error))),
         }
     }
 }

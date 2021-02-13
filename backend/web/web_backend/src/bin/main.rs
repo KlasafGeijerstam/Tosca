@@ -7,7 +7,11 @@ use std::io::BufReader;
 
 use serde::{Deserialize, Serialize};
 use structopt::StructOpt;
+
+use db_connector::create_db_pool_env;
 use web_backend::user_provider::{UserData, UserProvider, SuperUser, AdminUser, NormalUser };
+use web_backend::login_provider::LoginProvider;
+use web_backend::api;
 
 #[derive(StructOpt)]
 #[structopt(name = "Tosca REST-backend")]
@@ -51,21 +55,19 @@ fn load_ssl_keys(config: &Config) -> ServerConfig {
 
 #[get("/super")]
 async fn super_user(user: UserData<SuperUser>) -> impl Responder {
-    HttpResponse::Ok().body(format!("Hello! {}", user.token))
+    HttpResponse::Ok().body(format!("Hello! {}", user.first_name))
 }
 
 #[get("/normal")]
 async fn normal_user(user: UserData<NormalUser>) -> impl Responder {
-    HttpResponse::Ok().body(format!("Hello! {}", user.token))
+    HttpResponse::Ok().body(format!("Hello! {}", user.first_name))
 }
 
 #[get("/admin")]
 async fn admin_user(user: UserData<AdminUser>) -> impl Responder {
-    HttpResponse::Ok().body(format!("Hello! {}", user.token))
+    HttpResponse::Ok().body(format!("Hello! {}", user.first_name))
 }
 
-use db_connector::create_db_pool_env;
-use web_backend::api;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -81,7 +83,8 @@ async fn main() -> std::io::Result<()> {
         .map_err(|e| panic!("Failed to create db pool: {:?}", e))
         .unwrap();
 
-    let provider = web::Data::new(UserProvider {});
+    let user_provider = web::Data::new(UserProvider::new("REPLACEME"));
+    let login_provider = web::Data::new(LoginProvider::new("REPLACEME"));
 
     println!(
         "Tosca REST-backend listening on https://localhost:{}",
@@ -93,7 +96,8 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::NormalizePath::new(middleware::normalize::TrailingSlash::Trim))
             .wrap(middleware::Logger::default())
             .data(db_pool.clone())
-            .app_data(provider.clone())
+            .app_data(user_provider.clone())
+            .app_data(login_provider.clone())
             .service(web::scope("/api").configure(api::workspace::configure))
             .service(super_user)
             .service(normal_user)
