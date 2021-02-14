@@ -19,7 +19,7 @@
 </script>
 
 <a href="{$url() + '/' + workspace_id}" class="item" on:click={test}>
-  <info>
+  <div id="info">
     <h2>{name}</h2>
     <p>{info}</p>
     <!--controls>
@@ -30,13 +30,13 @@
         <Trash size="2em"/>
       </IconLink>
     </controls-->
-  </info>
+  </div>
   {#if active_list}
-    <shortcut>
+    <div>
       <IconLink link="{active_list}" title="Go to help list">
         <ClipboardList size="2em"/>
       </IconLink>
-    </shortcut>
+    </div>
   {/if}
 </a>
 
@@ -51,7 +51,7 @@
     color: black;
   }
 
-  info {
+  #info {
     flex-grow: 1;
   }
 </style>
