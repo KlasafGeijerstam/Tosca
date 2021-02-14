@@ -55,17 +55,17 @@ fn load_ssl_keys(config: &Config) -> ServerConfig {
 
 #[get("/super")]
 async fn super_user(user: UserData<SuperUser>) -> impl Responder {
-    HttpResponse::Ok().body(format!("Hello! {}", user.first_name))
+    HttpResponse::Ok().body(format!("Hello! {:?}", user))
 }
 
 #[get("/normal")]
 async fn normal_user(user: UserData<NormalUser>) -> impl Responder {
-    HttpResponse::Ok().body(format!("Hello! {}", user.first_name))
+    HttpResponse::Ok().body(format!("Hello! {:?}", user))
 }
 
 #[get("/admin")]
 async fn admin_user(user: UserData<AdminUser>) -> impl Responder {
-    HttpResponse::Ok().body(format!("Hello! {}", user.first_name))
+    HttpResponse::Ok().body(format!("Hello! {:?}", user))
 }
 
 
@@ -83,13 +83,16 @@ async fn main() -> std::io::Result<()> {
         .map_err(|e| panic!("Failed to create db pool: {:?}", e))
         .unwrap();
 
-    let user_provider = web::Data::new(UserProvider::new("REPLACEME"));
-    let login_provider = web::Data::new(LoginProvider::new("REPLACEME"));
+    let user_provider = web::Data::new(UserProvider::new(&config.user_provider));
+    let login_provider = web::Data::new(LoginProvider::new(&config.login_provider));
 
     println!(
         "Tosca REST-backend listening on https://localhost:{}",
         config.port
     );
+    
+    println!("Using login provider: {}", config.login_provider);
+    println!("Using user provider: {}", config.user_provider);
 
     HttpServer::new(move || {
         App::new()

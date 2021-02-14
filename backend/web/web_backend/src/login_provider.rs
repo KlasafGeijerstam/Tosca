@@ -1,17 +1,27 @@
-use reqwest::Client;
 use anyhow::Result;
+use reqwest::Client;
+use serde::{Deserialize, Serialize};
+use log::debug;
 
-/// To be sent to the LoginProvider
-struct Token {
-    token: String
+#[derive(Serialize)]
+struct Token<'a> {
+    token: &'a str,
+}
+
+#[derive(Deserialize)]
+struct TokenResponse {
+    sub: String,
+    exp: u64,
 }
 
 pub struct LoginProvider {
     client: Client,
-    api_host: String,
+    token_host: String,
+    logout_host: String,
 }
 
 impl LoginProvider {
+    ///! TODO: Cache
     ///! Wraps a Tosca login provider.
     ///! Should store tokens -> user_id mappings as well as token expiry.
     ///! Should implement functions that allow interaction
@@ -19,25 +29,37 @@ impl LoginProvider {
     ///! * GET /token
     ///! * POST /logout
 
-
     /// Creates a new `LoginProvider`, configured to interact with the provided
     /// Tosca login provider host.
     pub fn new(api_host: &str) -> LoginProvider {
         LoginProvider {
             client: Client::new(),
-            api_host: api_host.into(),
+            token_host: format!("{}/token", api_host),
+            logout_host: format!("{}/logout", api_host),
         }
     }
 
-    /// TODO &str should perhaps be a String, or Cow<&str>
-    /// Perform a (cached) lookup, convert the session token to a user-id
-    pub async fn lookup<'a>(&self, token: &'a str) -> Result<&'a str> {
-        todo!("Implement..")
+    /// Perform a (cached) lookup, converts a session token to a user-id
+    /// TODO: Handle token expiration
+    pub async fn lookup(&self, token: &str) -> Result<String> {
+        
+        debug!("LoginProvider: {} not in cache, performing lookup", token);
+
+        let response = self
+            .client
+            .get(&self.token_host)
+            .json(&Token { token })
+            .send()
+            .await?
+            .json::<TokenResponse>()
+            .await?;
+
+        Ok(response.sub)
     }
 
-    /// TODO
     /// Logs out the session token both from internal cache, and remote login provider.
-    pub async fn logout(&self, token: &str) -> Result<()> {
-        todo!("Implement")
+    /// TODO
+    pub async fn logout(&self, _token: &str) -> Result<()> {
+        Ok(())
     }
 }

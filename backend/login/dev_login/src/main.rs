@@ -66,9 +66,13 @@ async fn main() -> std::io::Result<()> {
     let args = Arguments::from_args();
     let port = args.port;
     let data = web::Data::new(args);
+    
+    pretty_env_logger::init();
+
     HttpServer::new(move || {
         App::new()
             .route("/login", web::get().to(read_index))
+            .wrap(actix_web::middleware::Logger::default())
             .service(do_login)
             .service(logout)
             .service(token)

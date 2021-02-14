@@ -2,13 +2,15 @@ use actix_web::http::header::Header;
 use actix_web::{error::ErrorUnauthorized, web, Error, FromRequest, HttpRequest};
 use actix_web_httpauth::headers::authorization::{Authorization, Bearer};
 use anyhow::bail;
-use futures_util::future::{err, ok, Ready};
 use reqwest::Client;
 use std::marker::PhantomData;
 use std::pin::Pin;
 use futures::Future;
 use crate::login_provider::LoginProvider;
+use log::debug;
+use serde::Deserialize;
 
+#[derive(Debug)]
 pub struct UserData<L: UserLevel> {
     phantom_level: PhantomData<L>,
     pub user_id: String,
@@ -18,12 +20,8 @@ pub struct UserData<L: UserLevel> {
     pub workspaces: Vec<String>,
 }
 
-pub struct UserProvider {
-    client: Client,
-    api_host: String,
-}
-
 /// Maps to data received from LoginProvider
+#[derive(Deserialize)]
 struct RemoteUser {
     pub first_name: String,
     pub last_name: String,
@@ -31,10 +29,18 @@ struct RemoteUser {
     pub workspaces: Vec<String>,
 }
 
+/// TODO: Cache
+pub struct UserProvider {
+    client: Client,
+    api_host: String,
+}
+
 impl UserProvider {
     ///! TODO
     ///! Wraps a Tosca user provider.
     ///!
+    ///! TODO: GET /workspaces/{workspace\_id}
+    ///! TODO: GET /workspaces
 
     /// Creates a new `UserProvider` with a given Tosca UserProvider host.
     pub fn new(api_host: &str) -> Self {
@@ -46,7 +52,7 @@ impl UserProvider {
     
     /// Gets UserData for a user_id. Returns `Err` if the user does not exist,
     /// or if the user associated with the user_id lacks permissions (greater permission value) (`L`).
-    async fn get_user<L: UserLevel>(&self, user_id: &str) -> anyhow::Result<UserData<L>> {
+    pub async fn get_user<L: UserLevel>(&self, user_id: &str) -> anyhow::Result<UserData<L>> {
         let RemoteUser {
             first_name,
             last_name,
@@ -77,26 +83,14 @@ impl UserProvider {
     /// TODO: Make UserProvider actually use a configured user provider to fetch data
     /// TODO: Cache lookups to user provider
     async fn get_user_from_provider(&self, user_id: &str) -> anyhow::Result<RemoteUser> {
-        self.client
-            .get(&format!("{}/users/{}", self.api_host, user_id));
+        let user = self.client
+            .get(&format!("{}/users/{}", self.api_host, user_id))
+            .send()
+            .await?
+            .json()
+            .await?;
 
-        //TODO FIX below
-        let level = if user_id == "super" {
-            0
-        } else if user_id == "admin" {
-            1
-        } else if user_id == "normal" {
-            2
-        } else {
-            bail!("User {} does not exist", user_id)
-        };
-
-        Ok(RemoteUser {
-            first_name: "Test".into(),
-            last_name: "Testsson".into(),
-            user_level: level,
-            workspaces: vec!["workspace1".into(), "workspace2".into()],
-        })
+        Ok(user)
     }
 }
 
@@ -128,9 +122,16 @@ where
                     .clone();
 
                 Box::pin(async move {
-                    // TODO: use `login_provider` to exchange `token` for `user_id`
+                    debug!("Looking up token {}", token);
 
-                    match user_provider.get_user(&token).await {
+                    let user_id = match login_provider.lookup(&token).await {
+                        Ok(user_id) => user_id,
+                        Err(error) => return Err(ErrorUnauthorized(format!("Unauthorized: {:?}", error)))
+                    };
+
+                    debug!("Token matches user {}", user_id);
+
+                    match user_provider.get_user(&user_id).await {
                         Ok(user) => Ok(user),
                         Err(error) => Err(ErrorUnauthorized(format!("Unauthorized: {:?}", error))),
                     }
@@ -170,13 +171,14 @@ const SUPER_USER: usize = 0;
 const ADMIN_USER: usize = 1;
 const NORMAL_USER: usize = 2;
 
-pub trait UserLevel {
+pub trait UserLevel: std::fmt::Debug {
     fn level(&self) -> usize;
     fn new() -> Self
     where
         Self: Sized;
 }
 
+#[derive(Debug)]
 pub struct SuperUser;
 
 impl UserLevel for SuperUser {
@@ -189,6 +191,7 @@ impl UserLevel for SuperUser {
     }
 }
 
+#[derive(Debug)]
 pub struct AdminUser;
 
 impl UserLevel for AdminUser {
@@ -201,6 +204,7 @@ impl UserLevel for AdminUser {
     }
 }
 
+#[derive(Debug)]
 pub struct NormalUser;
 
 impl UserLevel for NormalUser {
