@@ -3,6 +3,7 @@
   import IconButton from 'IconButton.svelte';  
   import InputWithButton from 'InputWithButton.svelte';
   import Button from "./Button.svelte";
+  import EditableField from "./EditableField.svelte";
   export let workspace_id: string;
   export let name: string;
   export let info: string;
@@ -33,14 +34,10 @@
 
 <div id="idbox">
   <div id="info">
-    <h4>Name:</h4>
-      <p>{name}</p>
-    <h4>Creator:</h4> 
-      <p>{creator.user_id}</p>
-    <h4>Information:</h4> 
-      <p>{info}</p>
-    <h4>Workspace ID:</h4> 
-      <p>{workspace_id}</p>
+    <EditableField title="Name" value={name} edit={edit_enabled}/>
+    <EditableField title="Information" value={info} edit={edit_enabled}/>
+    <EditableField title="Workspace ID" value={workspace_id} edit={edit_enabled}/>
+    <EditableField title="Creator" value={creator.user_id}/>
   </div>
 
   <div id="moderators">
@@ -101,7 +98,4 @@
       column-gap: 1em;
     }
 
-    h4 {
-      font-weight: bold;
-    }
 </style>

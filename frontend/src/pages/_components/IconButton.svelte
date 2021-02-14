@@ -14,6 +14,7 @@
   .btn {
     text-decoration: none;  
     color: black;
+    display: inline-flex;
   }
 
   .btn:hover {

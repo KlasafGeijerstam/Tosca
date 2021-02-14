@@ -12,27 +12,27 @@
     }
   }
 </script>
-<addmod>
+<div class="addmod">
   <input type="text" placeholder={placeholder} bind:value={value} on:keydown={check_enter}>
   <button on:click="{() => handler(value)}" title={title}>
   <slot>
     <Plus color="white"/>
   </slot>
   </button>
-</addmod>
+</div>
 <style>
-  addmod {
+  .addmod {
     display: flex;
     height: 2em;
   }
 
-  addmod > input {
+  .addmod > input {
     border-radius: 0.2em 0em 0em 0.2em;
     border: 1px solid var(--border-light);
     border-right: none;
   }
 
-  addmod > button {
+  .addmod > button {
     border-radius: 0em 0.2em 0.2em 0em;
     border: 1px solid var(--border-light);
     background-color: var(--success);
