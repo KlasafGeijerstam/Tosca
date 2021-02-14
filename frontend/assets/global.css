@@ -94,8 +94,16 @@ img:not([alt]) {
     font-weight: normal;
 }
 
+input[type=text], textarea {
+  background-color: var(--text-input-bg);
+}
+
 :root {
     --background-dark: #104F55;
     --dark-gray: #E0E0E0;
     --background-light: #21858E;
+    --success: #07a407; 
+    --error: red;
+    --border-light: gray;
+    --text-input-bg: #f7f7f7;
 }
