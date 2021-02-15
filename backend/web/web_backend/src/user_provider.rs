@@ -67,7 +67,7 @@ impl UserProvider {
                 "User lacks permissions. Required: {}, actual: {}",
                 required_level.level(),
                 user_level
-            );
+            )
         }
 
         Ok(UserData {

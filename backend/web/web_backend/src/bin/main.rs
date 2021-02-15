@@ -8,7 +8,7 @@ use std::io::BufReader;
 use serde::{Deserialize, Serialize};
 use structopt::StructOpt;
 
-use db_connector::create_db_pool_env;
+use db_connector::create_db_pool;
 use web_backend::user_provider::{UserData, UserProvider, SuperUser, AdminUser, NormalUser };
 use web_backend::login_provider::LoginProvider;
 use web_backend::api;
@@ -19,19 +19,37 @@ struct Arguments {
     /// The config file (in TOML format)
     config_file: String,
 
-    /// Toggles debug mode.
+    /// Database-url Overrides database configuration.
+    /// Example: `postgres://tosca_user:password@localhost/tosca_database`
     #[structopt(long)]
-    debug: bool,
+    database: Option<String>,
+}
+
+#[derive(Deserialize)]
+struct DatabaseConfig {
+    host: String,
+    port: u16,
+    user: String,
+    database: String,
+    password: String,
+}
+
+impl DatabaseConfig {
+    pub fn to_url(&self) -> String {
+        format!("postgres://{}:{}@{}:{}/{}", self.user, self.password, self.host, self.port, self.database)
+    }
 }
 
 #[derive(Deserialize)]
 struct Config {
-    public_host: String,
     port: u16,
     certificate_file: String,
     key_file: String,
     login_provider: String,
     user_provider: String,
+
+    #[serde(flatten)]
+    database: DatabaseConfig,
 }
 
 fn parse_config(cfg_file: &str) -> Result<Config> {
@@ -77,9 +95,14 @@ async fn main() -> std::io::Result<()> {
     let cfg = load_ssl_keys(&config);
 
     pretty_env_logger::init();
+    
+    let db_url = if let Some(url) = args.database {
+        url
+    } else {
+        config.database.to_url()
+    };
 
-    // Uses DATBASE_URL, from environment or .env file
-    let db_pool = create_db_pool_env()
+    let db_pool = create_db_pool(&db_url)
         .map_err(|e| panic!("Failed to create db pool: {:?}", e))
         .unwrap();
 

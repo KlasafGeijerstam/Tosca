@@ -9,8 +9,10 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
         .service(post_workspaces));
 }
 
+use crate::user_provider::{UserData, AdminUser, SuperUser, NormalUser};
+
 #[get("/")]
-async fn get_workspaces(db_pool: DbPool) -> Result<HttpResponse, Error> {
+async fn get_workspaces(db_pool: DbPool, user: UserData<NormalUser>) -> Result<HttpResponse, Error> {
     let con = db_pool.get().expect("Failed to get database handle from pool");
     let workspaces = web::block(move || workspace::get_workspaces(&con))
         .await
