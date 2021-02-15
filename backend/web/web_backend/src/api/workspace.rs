@@ -5,11 +5,14 @@ use db_connector::workspace;
 
 pub fn configure(cfg: &mut web::ServiceConfig) {
     cfg.service(web::scope("/workspaces")
-        .service(get_workspaces));
+        .service(get_workspaces)
+        .service(post_workspaces));
 }
 
+use crate::user_provider::{UserData, AdminUser, SuperUser, NormalUser};
+
 #[get("/")]
-async fn get_workspaces(db_pool: DbPool) -> Result<HttpResponse, Error> {
+async fn get_workspaces(db_pool: DbPool, user: UserData<NormalUser>) -> Result<HttpResponse, Error> {
     let con = db_pool.get().expect("Failed to get database handle from pool");
     let workspaces = web::block(move || workspace::get_workspaces(&con))
         .await
@@ -19,6 +22,12 @@ async fn get_workspaces(db_pool: DbPool) -> Result<HttpResponse, Error> {
         })?;
 
     Ok(HttpResponse::Ok().json(workspaces))
+}
+
+#[post("/")]
+async fn post_workspaces(db_pool: DbPool) -> Result<HttpResponse, Error> {
+    let con = db_pool.get().expect("Failed to get database handle from pool");
+    Ok(HttpResponse::Ok().finish())
 }
 
 //* GET `/workspaces`

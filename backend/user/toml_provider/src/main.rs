@@ -90,8 +90,11 @@ async fn main() -> std::io::Result<()> {
 
     println!("TOML user provider listening on port {}", args.port);
 
+    pretty_env_logger::init();
+
     HttpServer::new(move || {
         App::new()
+            .wrap(actix_web::middleware::Logger::default())
             .app_data(users.clone())
             .app_data(workspaces.clone())
             .service(

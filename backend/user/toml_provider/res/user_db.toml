@@ -16,32 +16,32 @@ user_level = 1 # Admin
 [users.kuba]
 first_name = "Jakub"
 last_name = "Jagiello"
-user_level = 1
+user_level = 1 # Admin
 
 [users.admin]
 first_name = "Arne"
 last_name = "Admin"
-user_level = 2 # Super user
+user_level = 0 # Super user
 
 [users.student1]
 first_name = "Student1"
 last_name = "Studentsson"
-user_level = 0 # Normal user
+user_level = 2 # Normal user
 
 [users.student2]
 first_name = "Student2"
 last_name = "Studentsson"
-user_level = 0 # Normal user
+user_level = 2 # Normal user
 
 [users.student3]
 first_name = "Student3"
 last_name = "Studentsson"
-user_level = 0 # Normal user
+user_level = 2 # Normal user
 
 [users.student4]
 first_name = "Student4"
 last_name = "Studentsson"
-user_level = 0 # Normal user
+user_level = 2 # Normal user
 
 [workspaces.5DV202]
 users = [
