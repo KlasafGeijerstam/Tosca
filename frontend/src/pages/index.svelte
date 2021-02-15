@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { goto } from "@roxi/routify";
+  import { redirect } from "@roxi/routify";
   
-  $goto('/workspaces');
+  $redirect('/login');
 </script>
