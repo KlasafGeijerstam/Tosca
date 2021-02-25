@@ -1,6 +1,12 @@
-import HMR from '@roxi/routify/hmr'
-import App from './App.svelte';
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-const app = HMR(App, { target: document.body }, 'routify-app')
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
 
-export default app;
+if (environment.production) {
+  enableProdMode();
+}
+
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));

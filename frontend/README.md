@@ -1,67 +1,27 @@
-# routify-starter
+# Frontend
 
-Starter template for [Routify](https://github.com/sveltech/routify).
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.2.
 
-### Get started
+## Development server
 
-#### Starter templates
-| Template                                  | Description                                                 |
-|-------------------------------------------|-------------------------------------------------------------|
-| [master](https://example.routify.dev/)    | Default template, includes examples folder                  |
-| [blog](https://blog-example.routify.dev/) | Generates a blog from local markdown posts. Includes mdsvex |
-| [auth](https://auth-example.routify.dev/) | Embedded login on protected pages. Includes Auth0           |
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-To use a template, run:
+## Code scaffolding
 
-`npx @sveltech/routify init`
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-or
+## Build
 
-`npx @sveltech/routify init --branch <branch-name>`
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-The above commands will populate the current directory, they don't create a new one.
+## Running unit tests
 
-### npm scripts
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-| Syntax           | Description                                                                       |
-|------------------|-----------------------------------------------------------------------------------|
-| `dev`            | Development (port 5000)                                                           |
-| `dev:nollup`     | Development with crazy fast rebuilds (port 5000)                                  |
-| `dev-dynamic`    | Development with dynamic imports                                                  |
-| `build`          | Build a bundled app with SSR + prerendering and dynamic imports                   |
-| `serve`          | Run after a build to preview. Serves SPA on 5000 and SSR on 5005                  |
-| `deploy:*`       | Deploy to netlify or now                                                          |
-| `export`         | Create static pages from content in dist folder (used by `npm run build`)         |
+## Running end-to-end tests
 
-### SSR and pre-rendering
+Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-SSR and pre-rendering are included in the default build process.
+## Further help
 
-`npm run deploy:(now|netlify)` will deploy the app with SSR and prerendering included.
-
-To render async data, call the `$ready()` helper whenever your data is ready.
-
-If $ready() is present, rendering will be delayed till the function has been called.
-
-Otherwise it will be rendered instantly.
-
-See [src/pages/example/api/[showId].svelte](https://github.com/sveltech/routify-starter/blob/master/src/pages/example/api/%5BshowId%5D.svelte) for an example.
-
-### Production
-
-* For SPA or SSR apps please make sure that url rewrite is enabled on the server.
-* For SPA redirect to `__app.html`.
-* For SSR redirect to the lambda function or express server.
-
-### Typescript
-
-For Typescript, we recommend [@lamualfa](https://github.com/lamualfa) excellent [routify-ts](https://github.com/lamualfa/routify-ts/)
-
-New project: `npx routify-ts init <project-name> [routify-init-args]`
-
-Existing project: `npx routify-ts convert [project-directory]`
-
-
-### Issues?
-
-File on Github! See https://github.com/sveltech/routify/issues .
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
