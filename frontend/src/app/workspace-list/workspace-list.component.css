@@ -1,0 +1,70 @@
+/*
+ * Theme:
+ * Green #104F55
+ * Red #AA3E58
+ * Grey #3D394E
+ * Yellow #D8A14A
+ */
+
+.page-header {
+  background-color: #aa3e58;
+  min-height: 2em;
+}
+
+.page-header h1 {
+  color: #ffffff;
+  margin-left: 1em;
+  vertical-align: center;
+}
+
+.small-button:hover {
+  color: #fefefe;
+}
+
+.container {
+  width: 100%;
+  margin: 3em;
+  display: flex;
+  -ms-box-orient: horizontal; /* TODO: Questionable if this is valid */
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-content: space-between;
+}
+
+mat-card {
+  width: 20em;
+  height: auto;
+  margin: 0 2em 2em 0;
+}
+
+mat-card-title {
+  color: #aa3e58;
+  width: 100%;
+  height: 2em;
+}
+
+mat-icon {
+  color: #ffffff;
+  width: 1.5em;
+  height: 1.5em;
+}
+
+mat-card-content {
+  color: #676767;
+}
+
+mat-card-actions a {
+  color: #aa3e58;
+  text-underline: none;
+  padding: 0.5em;
+  border: 0;
+  margin: 1px;
+  font-size: 14px;
+  background-color: #ffffff;
+}
