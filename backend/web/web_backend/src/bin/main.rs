@@ -53,8 +53,6 @@ struct Config {
 
 fn parse_config(cfg_file: &str) -> Result<Config> {
     let f_data = std::fs::read_to_string(cfg_file)?;
-    let val: toml::Value = toml::from_str(&f_data).unwrap();
-    println!("{:#?}", val);
     toml::from_str(&f_data).map_err(|x| anyhow!("Failed to load config file: {:?}", x))
 }
 
