@@ -5,7 +5,9 @@ export DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@$PGHOST:$PGPORT/$PGDATABASE
 
 # Run migrations
 printf "[Migrations] Starting..\n"
-diesel --config-file db_connector/diesel.toml migration --migration-dir db_connector/migrations/ run
+pushd db_connector
+diesel --config-file diesel.toml migration --migration-dir migrations/ run
+popd
 printf "[Migrations] DONE!\n"
 
 
