@@ -72,6 +72,11 @@ fn load_ssl_keys(config: &Config) -> ServerConfig {
     cfg
 }
 
+#[get("/ping")]
+async fn ping() -> impl Responder {
+    "Pong!"
+}
+
 #[get("/test/super")]
 async fn super_user(user: UserData<SuperUser>) -> impl Responder {
     HttpResponse::Ok().body(format!("Hello! {:?}", user))
@@ -129,6 +134,7 @@ async fn main() -> std::io::Result<()> {
             .service(super_user)
             .service(normal_user)
             .service(admin_user)
+            .service(ping)
     })
     .bind_rustls(("0.0.0.0", config.port), cfg)?
     .run()

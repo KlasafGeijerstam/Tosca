@@ -3,9 +3,10 @@ import requests
 import json
 
 api_base_url = f"https://localhost:25674/api/"
+headers = { "Authorization": "Bearer token_normal" }
 
 try:
-    response = requests.get(api_base_url + "workspaces", verify=False)
+    response = requests.get(api_base_url + "workspaces", headers=headers, verify=False)
     if response.status_code != 200:
         raise RuntimeError("Status code:", f"expected 200 got {response.status_code}") 
     

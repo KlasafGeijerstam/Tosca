@@ -12,7 +12,7 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
 
 use crate::user_provider::{UserData, AdminUser, SuperUser, NormalUser};
 
-#[get("/")]
+#[get("")]
 async fn get_workspaces(db_pool: DbPool, _user: UserData<NormalUser>) -> Result<HttpResponse, Error> {
     let con = db_pool.get().expect("Failed to get database handle from pool");
     let workspaces = web::block(move || workspace::get_workspaces(&con))
@@ -30,7 +30,7 @@ struct AddWorkspace {
     name: String,
 }
 
-#[post("/")]
+#[post("")]
 async fn add_workspace(db_pool: DbPool, user: UserData<AdminUser>, wspace: Json<AddWorkspace>) -> Result<HttpResponse, Error> {
     let con = db_pool.get().expect("Failed to get database handle from pool");
     let workspace = workspace::NewWorkspace {

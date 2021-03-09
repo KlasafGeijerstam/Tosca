@@ -1,27 +1,17 @@
-[users.klas]
-first_name = "Klas"
-last_name = "af Geijerstam"
-user_level = 1 # Admin
-
-[users.fredrik]
-first_name = "Fredrik"
-last_name = "Peteri"
-user_level = 1 # Admin
-
-[users.emilia]
-first_name = "Emilia"
-last_name = "Harr"
-user_level = 1 # Admin
-
-[users.kuba]
-first_name = "Jakub"
-last_name = "Jagiello"
-user_level = 1 # Admin
+[users.super_user]
+first_name = "Super"
+last_name = "User"
+user_level = 0 # Super User
 
 [users.admin]
-first_name = "Arne"
-last_name = "Admin"
-user_level = 0 # Super user
+first_name = "Admin"
+last_name = "User"
+user_level = 1 # Admin
+
+[users.normal]
+first_name = "Normal"
+last_name = "User"
+user_level = 2 # Normal
 
 [users.student1]
 first_name = "Student1"
