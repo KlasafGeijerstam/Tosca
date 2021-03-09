@@ -48,12 +48,13 @@ struct Config {
     login_provider: String,
     user_provider: String,
 
-    #[serde(flatten)]
     database: DatabaseConfig,
 }
 
 fn parse_config(cfg_file: &str) -> Result<Config> {
     let f_data = std::fs::read_to_string(cfg_file)?;
+    let val: toml::Value = toml::from_str(&f_data).unwrap();
+    println!("{:#?}", val);
     toml::from_str(&f_data).map_err(|x| anyhow!("Failed to load config file: {:?}", x))
 }
 
@@ -71,17 +72,17 @@ fn load_ssl_keys(config: &Config) -> ServerConfig {
     cfg
 }
 
-#[get("/super")]
+#[get("/test/super")]
 async fn super_user(user: UserData<SuperUser>) -> impl Responder {
     HttpResponse::Ok().body(format!("Hello! {:?}", user))
 }
 
-#[get("/normal")]
+#[get("/test/normal")]
 async fn normal_user(user: UserData<NormalUser>) -> impl Responder {
     HttpResponse::Ok().body(format!("Hello! {:?}", user))
 }
 
-#[get("/admin")]
+#[get("/test/admin")]
 async fn admin_user(user: UserData<AdminUser>) -> impl Responder {
     HttpResponse::Ok().body(format!("Hello! {:?}", user))
 }

@@ -78,10 +78,10 @@ pub fn get_workspace(
 }
 
 /// Stores a new workspace.
-pub fn new_workspace(con: &DbConnection, wspace: NewWorkspace) -> Result<usize> {
+pub fn add_workspace(con: &DbConnection, wspace: &NewWorkspace) -> Result<usize> {
     use schema::workspace::dsl::*;
     diesel::insert_into(workspace)
-        .values(&wspace)
+        .values(wspace)
         .execute(con)
         .map_err(|e| anyhow!("Failed to insert new workspace: {:?}", e))
 }
@@ -141,7 +141,7 @@ pub fn delete_whitelist_entry(
 }
 
 /// Updates the workspace with the given workspace id.
-pub fn update_workspace(con: &DbConnection, wspace_id: i32, wspace: NewWorkspace) -> Result<usize> {
+pub fn update_workspace(con: &DbConnection, wspace_id: i32, wspace: &NewWorkspace) -> Result<usize> {
     use schema::workspace::dsl::*;
     let target = workspace.filter(workspace_id.eq(wspace_id));
 
