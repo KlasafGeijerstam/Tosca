@@ -11,7 +11,7 @@ if (( $missing_dep == 1 )) ; then
 fi
 
 # Start docker db
-echo "Starting database.."
+echo "[Database] Starting.."
 sudo docker run --rm -P -p 127.0.0.1:5432:5432 -e POSTGRES_PASSWORD="1234" --name tosca-test-db -d postgres
 
 export PGUSER=postgres
@@ -23,8 +23,11 @@ export PGDATABASE=postgres
 # Replace with loop checking that posgres is up..
 sleep 2
 
+echo "[Database] Started!"
+
 _test/all.sh
 
 # Close docker db
-echo "Shutting down database"
+echo "[Database] Shutting down.."
 sudo docker stop tosca-test-db
+echo "[Database] DONE!"

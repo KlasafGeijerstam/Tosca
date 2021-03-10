@@ -62,19 +62,21 @@ printf "[Tests] Running user tests..\n"
 for test in _test/tests/*; do
 	name=$(basename $test)
 
-	output=$($test)
+	output=$($test 2>&1)
 	ret=$?
 
 	printf "\t[$name]: "
 	if (( $ret == 0 )); then
 		printf "\e[32mPASSED\e[0m\n"
-		printf "\t$output\n"
 	else
 		printf "\e[31mFAILED\e[0m\n"
-		printf "\t$output\n"
+	fi
+
+	if [[ ! $output == "" ]]; then
+		printf "%s\n" $output | awk '{ print "\t\t[output]", $0 }'
 	fi
 done
-printf "[Tests] DONE!.\n"
+printf "[Tests] DONE!\n"
 
 
 # Close the backend
