@@ -28,6 +28,7 @@ async fn get_workspaces(db_pool: DbPool, _user: UserData<NormalUser>) -> Result<
 #[derive(Deserialize)]
 struct AddWorkspace {
     name: String,
+    info: String,
 }
 
 #[post("")]
@@ -35,7 +36,7 @@ async fn add_workspace(db_pool: DbPool, user: UserData<AdminUser>, wspace: Json<
     let con = db_pool.get().expect("Failed to get database handle from pool");
     let workspace = workspace::NewWorkspace {
         creator: user.user_id,
-        info: "".into(), 
+        info: wspace.info.clone(), 
         name: wspace.name.clone(),
     };
     
