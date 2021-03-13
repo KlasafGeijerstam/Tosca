@@ -66,13 +66,16 @@ for test in _test/tests/*; do
 	ret=$?
 
 	printf "\t[$name]: "
-	if [[ ! $output == "" ]]; then
-		printf "\e[33mOUTPUT\e[0m\n"
-		printf "%s\n" "$output" | awk '{ print "\t\t" $0 }'
-	elif (( $ret == 0 )); then
-		printf "\e[32mPASSED\e[0m\n"
+	if (( $ret == 0 )); then
+		printf "\e[32mPASSED\e[0m"
 	else
-		printf "\e[31mFAILED\e[0m\n"
+		printf "\e[31mFAILED\e[0m"
+	fi
+	if [[ ! $output == "" ]]; then
+		printf " \e[33mOUTPUT\e[0m\n"
+		printf "%s\n" "$output" | awk '{ print "\t\t" $0 }'
+	else
+		printf "\n"
 	fi
 
 done
