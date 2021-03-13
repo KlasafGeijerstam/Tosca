@@ -1,9 +1,9 @@
 #!/usr/bin/python3
+import sys
 import requests
-import json
 
-api_base_url = f"https://localhost:25674/api/"
-headers = { "Authorization": "Bearer token_admin" }
+API_BASE_URL = "https://localhost:25674/api/"
+headers = {"Authorization": "Bearer token_admin"}
 
 data = {
     "name": "Eden",
@@ -11,12 +11,26 @@ data = {
 }
 
 try:
-    response = requests.post(api_base_url + "workspaces", headers=headers, verify=False, json=data)
+    response = requests.post(API_BASE_URL + "workspaces", headers=headers, verify=False, json=data)
     if response.status_code != 200:
-        raise RuntimeError("Status code:", f"expected 200 got {response.status_code}") 
-    
-    exit(0)
+        raise AssertionError("Status code:", f"expected 200 got {response.status_code}")
 
-except RuntimeError as e:
-    print("\t" + f"{e}")
-    exit(1)
+    expected = {
+        "name": "Eden",
+        "info": "Lovely place, nice apples!",
+        "creator": "admin",
+    }
+    response = requests.get(API_BASE_URL + "workspaces", headers=headers, verify=False)
+    if expected["name"] not in [x["name"] for x in response.json()]:
+        raise AssertionError(
+            "Data:",
+            f"expected worspace with name: {expected['name']} to be in response."
+            " Got {[x['name'] for x in response.json()]}"
+        )
+
+    response = requests.get(API_BASE_URL + "workspaces", headers=headers, verify=False)
+    sys.exit(0)
+
+except AssertionError as exception:
+    print(exception)
+    sys.exit(1)

@@ -1,19 +1,20 @@
 #!/usr/bin/python3
+import sys
 import requests
-import json
 
-api_base_url = f"https://localhost:25674/api/"
-headers = { "Authorization": "Bearer token_normal" }
+API_BASE_URL = "https://localhost:25674/api/"
+headers = {"Authorization": "Bearer token_normal"}
 
 try:
-    response = requests.get(api_base_url + "workspaces", headers=headers, verify=False)
-    if response.status_code != 200:
-        raise RuntimeError("Status code:", f"expected 200 got {response.status_code}") 
-    
-    if response.json() != []:
-        raise RuntimeError("Data:", "expected [] got " + f"{response.json()}") 
+    response = requests.get(API_BASE_URL + "workspaces", headers=headers, verify=False)
 
-    exit(0)
-except RuntimeError as e:
-    print("\t" + f"{e}")
-    exit(1)
+    if response.status_code != 200:
+        raise AssertionError("Status code:", f"expected 200 got {response.status_code}")
+
+    if response.json() != []:
+        raise AssertionError("Data:", "expected [] got " + f"{response.json()}")
+
+    sys.exit(0)
+except AssertionError as exception:
+    print(exception)
+    sys.exit(1)
