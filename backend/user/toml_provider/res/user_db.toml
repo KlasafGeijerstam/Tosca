@@ -1,4 +1,4 @@
-[users.super_user]
+[users.super]
 first_name = "Super"
 last_name = "User"
 user_level = 0 # Super User
