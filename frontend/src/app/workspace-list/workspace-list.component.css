@@ -1,19 +1,7 @@
-.page-header {
-  background-color: var(--tosca-primary-color);
-  min-height: 2em;
-}
-
-.page-header h1 {
-  color: var(--tosca-primary-text);
-  margin-left: 1em;
-  vertical-align: center;
-}
-
-.container {
+.workspace-list {
   width: 100%;
-  margin: 3em;
   display: flex;
-  -ms-box-orient: horizontal; /* TODO: Questionable if this is valid */
+  -ms-box-orient: horizontal;
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;

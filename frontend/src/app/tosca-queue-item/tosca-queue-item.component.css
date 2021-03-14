@@ -1,4 +1,4 @@
-#container {
+.queue-item {
   min-width: 20rem;
   border: 1px solid var(--tosca-primary-color);
   margin: 0 auto 1rem auto;

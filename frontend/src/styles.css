@@ -9,6 +9,20 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.container {
+  height: 100%;
+  margin: 2% 10% 2% 10%;
+}
+
+.container-header {
+  background-color: var(--tosca-primary-color);
+  color: var(--tosca-primary-text);
+  padding: 0 0.7rem 0 0.7rem;
+  font-weight: bold;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
 :root {
   --tosca-primary-color: #aa3e57;
   --tosca-accent-color: #104f55;
