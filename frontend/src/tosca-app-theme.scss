@@ -1,0 +1,118 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+// Available color palettes: https://material.io/design/color/
+
+$tosca-red: (
+  50 : #f5e8eb,
+  100 : #e6c5cd,
+  200 : #d59fab,
+  300 : #c47889,
+  400 : #b75b70,
+  500 : #aa3e57,
+  600 : #a3384f,
+  700 : #993046,
+  800 : #90283c,
+  900 : #7f1b2c,
+  A100 : #ffb9c3,
+  A200 : #ff8698,
+  A400 : #ff536c,
+  A700 : #ff3a56,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #ffffff,
+  )
+);
+
+$tosca-blue: (
+  50 : #e2eaeb,
+  100 : #b7cacc,
+  200 : #88a7aa,
+  300 : #588488,
+  400 : #34696f,
+  500 : #104f55,
+  600 : #0e484e,
+  700 : #0c3f44,
+  800 : #09363b,
+  900 : #05262a,
+  A100 : #65e8ff,
+  A200 : #32e0ff,
+  A400 : #00d8fe,
+  A700 : #00c3e5,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #ffffff,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+$tosca-orange: (
+  50 : #fbede6,
+  100 : #f5d1c1,
+  200 : #efb398,
+  300 : #e9946e,
+  400 : #e47d4f,
+  500 : #df6630,
+  600 : #db5e2b,
+  700 : #d75324,
+  800 : #d2491e,
+  900 : #ca3813,
+  A100 : #fffbfa,
+  A200 : #ffd0c7,
+  A400 : #ffa694,
+  A700 : #ff917a,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #000000,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+$tosca-app-primary: mat-palette($tosca-red);
+$tosca-app-accent: mat-palette($tosca-blue);
+$tosca-app-warn: mat-palette($tosca-orange);
+
+$tosca-app-theme: mat-light-theme((
+  color: (
+    primary: $tosca-app-primary,
+    accent: $tosca-app-accent,
+    warn: $tosca-app-warn,
+  )
+));
+
+@include angular-material-theme($tosca-app-theme);

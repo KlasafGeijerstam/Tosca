@@ -1,0 +1,25 @@
+#container {
+  min-width: 20rem;
+  border: 1px solid var(--tosca-primary-color);
+  margin: 0 auto 1rem auto;
+  padding: 1rem;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.user-info {
+  flex-grow: 1;
+}
+
+.buttons {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+a {
+  color: var(--tosca-primary-color);
+}
+
+button {
+  margin: 1rem;
+}

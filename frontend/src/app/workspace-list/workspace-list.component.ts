@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { workspaces } from "../workspaces";
 
 @Component({
   selector: 'app-workspace-list',
@@ -6,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./workspace-list.component.css']
 })
 export class WorkspaceListComponent implements OnInit {
-
+  workspaces = workspaces;
   constructor() { }
 
 

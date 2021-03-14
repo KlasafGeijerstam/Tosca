@@ -1,0 +1,16 @@
+<div id="container">
+  <div class="info-box">
+    <h2 class="header">Info</h2>
+    <p>Here is some info about the list.</p>
+  </div>
+
+
+
+  <app-tosca-queue-item *ngFor="let student of studentQueue"
+                        [id]="student.id"
+                        [name]="student.name"
+                        [username]="student.username"
+                        [message]="student.message"
+                        [link]="student.link">
+  </app-tosca-queue-item>
+</div>

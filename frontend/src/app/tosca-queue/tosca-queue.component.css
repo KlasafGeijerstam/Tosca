@@ -1,0 +1,28 @@
+#container {
+  max-width: 60rem;
+  margin: 2rem auto 2rem auto;
+}
+
+hr {
+  width: 75%;
+  border-color: var(--tosca-primary-color);
+  margin-bottom: 1em;
+}
+
+.info-box {
+  background-color: var(--tosca-text-box-color);
+  border-radius: 0.5rem;
+}
+
+.header {
+  background-color: var(--tosca-primary-color);
+  color: var(--tosca-primary-text);
+  padding: 0 0.7rem 0 0.7rem;
+  font-weight: bold;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+p {
+  padding: 1rem;
+}

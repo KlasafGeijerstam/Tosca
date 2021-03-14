@@ -1,32 +1,19 @@
-<div class="page-header">
+<div class="component-header">
   <h1>Workspaces</h1>
 </div>
 
 <div class="container">
-  <mat-card>
+  <mat-card *ngFor="let workspace of workspaces">
     <mat-card-header>
-      <mat-card-title>Course In Science</mat-card-title>
+      <mat-card-title>{{ workspace.name }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <img mat-card-image src="assets/genericCardImg.png" alt="Workspace image"/>
-      <p id="workspace-desc">This is a course where we talk about science. What is science? Why is science valuable? <br><br>Please sign up to the waiting list for help during the lectures. Sign up to the seminar groups before 24/5.</p>
+      <img mat-card-image src="{{ workspace.img }}" alt="Workspace image"/>
+      <p id="workspace-desc">{{ workspace.description }}</p>
     </mat-card-content>
     <mat-card-actions>
-      <a href="https://google.se">Waiting list</a>
-      <a href="https://google.se">Seminar</a>
-    </mat-card-actions>
-  </mat-card>
-
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Course With Longer Name Than Expected</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <img mat-card-image src="assets/genericCardImg.png" alt="Workspace image"/>
-      <p id="workspace-desc">This course has a very long name. To compensate, the description is short.</p>
-    </mat-card-content>
-    <mat-card-actions>
-      <a href="https://google.se">Groups</a>
+      <a href="queues">Waiting list</a>
+      <a href="signups">Seminar</a>
     </mat-card-actions>
   </mat-card>
 

@@ -1,0 +1,13 @@
+<mat-card id="container">
+  <div class="user-info">
+    <h2>{{ name }} - {{ username }}</h2>
+    <p>{{ message }}</p>
+    <a *ngIf="link" href="{{ link }}">{{ link }}</a>
+  </div>
+
+  <div class="buttons">
+    <button mat-raised-button color="accent">MsgIcon</button>
+    <button mat-raised-button color="accent">Claim</button>
+    <button mat-flat-button color="warn">Claimed</button>
+  </div>
+</mat-card>
