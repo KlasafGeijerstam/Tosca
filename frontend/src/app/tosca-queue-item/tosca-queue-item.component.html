@@ -6,8 +6,12 @@
   </div>
 
   <div class="buttons">
-    <button mat-raised-button color="accent">MsgIcon</button>
-    <button mat-raised-button color="accent">Claim</button>
-    <button mat-flat-button color="warn">Claimed</button>
+    <button mat-raised-button
+            id="claimed-button"
+            color="{{ claimed ? 'warn' : 'primary' }}"
+            (click)="claim()"
+            title="{{ claimedBy }}"
+    >{{ claimed ? 'Unclaim' : 'Claim' }}</button>
+    <button mat-raised-button color="primary">MsgIcon</button>
   </div>
 </mat-card>

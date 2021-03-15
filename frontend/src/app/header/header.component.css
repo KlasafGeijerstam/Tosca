@@ -16,10 +16,11 @@ img {
 
 #user-name {
   margin: 10px 20px 5px auto;
+  color: var(--tosca-primary-text);
 }
 
 #header a {
   display: flex;
   text-decoration: none;
-  color: inherit;
+  color: var(--tosca-primary-text);
 }

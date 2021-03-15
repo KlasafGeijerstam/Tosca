@@ -24,8 +24,8 @@ body {
 }
 
 :root {
-  --tosca-primary-color: #aa3e57;
-  --tosca-accent-color: #104f55;
+  --tosca-primary-color: #104f55;
+  --tosca-accent-color: #903c5c;
   --tosca-warn-color: #df6630;
 
   --tosca-primary-text: #ffffff;
@@ -35,5 +35,5 @@ body {
   --tosca-bg-color: #ffffff;
   --tosca-text-color: #676767;
 
-  --tosca-text-box-color: #f5e8eb;
+  --tosca-text-box-color: #e2eaeb;
 }

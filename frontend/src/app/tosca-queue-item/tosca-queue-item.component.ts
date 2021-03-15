@@ -11,10 +11,17 @@ export class ToscaQueueItemComponent implements OnInit {
   @Input() username: string;
   @Input() message: string;
   @Input() link: string;
+  claimed: boolean;
+  claimedBy: string;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  claim(): void {
+    this.claimed = !this.claimed;
+    this.claimedBy = 'USERNAME';
   }
 
 }

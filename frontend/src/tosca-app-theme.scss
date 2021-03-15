@@ -103,8 +103,41 @@ $tosca-orange: (
   )
 );
 
-$tosca-app-primary: mat-palette($tosca-red);
-$tosca-app-accent: mat-palette($tosca-blue);
+$tosca-plum: (
+  50 : #f2e8eb,
+  100 : #dec5ce,
+  200 : #c89eae,
+  300 : #b1778d,
+  400 : #a15974,
+  500 : #903c5c,
+  600 : #883654,
+  700 : #7d2e4a,
+  800 : #732741,
+  900 : #611a30,
+  A100 : #ff9db9,
+  A200 : #ff6a94,
+  A400 : #ff3770,
+  A700 : #ff1e5e,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #ffffff,
+    A700 : #ffffff,
+  )
+);
+
+$tosca-app-primary: mat-palette($tosca-blue);
+$tosca-app-accent: mat-palette($tosca-plum);
 $tosca-app-warn: mat-palette($tosca-orange);
 
 $tosca-app-theme: mat-light-theme((

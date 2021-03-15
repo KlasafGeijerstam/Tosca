@@ -36,5 +36,6 @@ mat-card-content {
 }
 
 mat-card-actions {
+  margin-left:0;
   margin-bottom: 0;
 }
