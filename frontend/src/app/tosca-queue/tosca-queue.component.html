@@ -1,16 +1,17 @@
-<div class="container">
-  <div class="info-box">
-    <h1 class="container-header">QueueName</h1>
-    <p>Here is some info about the list.</p>
-  </div>
-
-
-
-  <app-tosca-queue-item *ngFor="let student of studentQueue"
-                        [id]="student.id"
-                        [name]="student.name"
-                        [username]="student.username"
-                        [message]="student.message"
-                        [link]="student.link">
-  </app-tosca-queue-item>
-</div>
+<mat-card class="container">
+  <mat-card-title>
+    QueueName
+  </mat-card-title>
+  <mat-card-subtitle>
+      Here is some info about the list.
+  </mat-card-subtitle>
+  <mat-card-content>
+    <app-tosca-queue-item *ngFor="let student of studentQueue"
+                          [id]="student.id"
+                          [name]="student.name"
+                          [username]="student.username"
+                          [message]="student.message"
+                          [link]="student.link">
+    </app-tosca-queue-item>
+  </mat-card-content>
+</mat-card>

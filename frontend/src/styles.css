@@ -14,15 +14,6 @@ body {
   margin: 2% 10% 2% 10%;
 }
 
-.container-header {
-  background-color: var(--tosca-primary-color);
-  color: var(--tosca-primary-text);
-  padding: 0 0.7rem 0 0.7rem;
-  font-weight: bold;
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
-}
-
 :root {
   --tosca-primary-color: #104f55;
   --tosca-accent-color: #903c5c;
@@ -35,5 +26,5 @@ body {
   --tosca-bg-color: #ffffff;
   --tosca-text-color: #676767;
 
-  --tosca-text-box-color: #e2eaeb;
+  --tosca-text-box-color: #e3ebe2;
 }
