@@ -1,20 +1,16 @@
-<div class="container">
-  <h1 class="container-header">Workspaces</h1>
-
-  <div class="workspace-list">
+<div class="container workspace-list">
     <mat-card *ngFor="let workspace of workspaces">
       <mat-card-header>
         <mat-card-title>{{ workspace.name }}</mat-card-title>
       </mat-card-header>
+      <img mat-card-image src="{{ workspace.img }}" alt="Workspace image"/>
       <mat-card-content>
-        <img mat-card-image src="{{ workspace.img }}" alt="Workspace image"/>
         <p id="workspace-desc">{{ workspace.description }}</p>
       </mat-card-content>
       <mat-card-actions>
-        <a href="queues">Waiting list</a>
-        <a href="signups">Seminar</a>
+        <a mat-raised-button color="accent" href="queues">Waiting list</a>
+        <a mat-raised-button color="accent" href="signups">Seminar</a>
       </mat-card-actions>
     </mat-card>
-  </div>
 </div>
 

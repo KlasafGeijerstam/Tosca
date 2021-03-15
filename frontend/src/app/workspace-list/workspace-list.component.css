@@ -1,5 +1,4 @@
 .workspace-list {
-  width: 100%;
   display: flex;
   -ms-box-orient: horizontal;
   display: -webkit-box;
@@ -17,12 +16,12 @@ mat-card {
   width: 20em;
   height: auto;
   margin: 0 2em 2em 0;
+  display: flex;
+  flex-direction: column;
 }
 
 mat-card-title {
   color: var(--tosca-primary-color);
-  width: 100%;
-  height: 2em;
 }
 
 mat-icon {
@@ -33,14 +32,9 @@ mat-icon {
 
 mat-card-content {
   color: var(--tosca-text-color);
+  flex-grow: 1;
 }
 
-mat-card-actions a {
-  color: var(--tosca-primary-color);
-  text-underline: none;
-  padding: 0.5em;
-  border: 0;
-  margin: 1px;
-  font-size: 14px;
-  background-color: var(--tosca-bg-color);
+mat-card-actions {
+  margin-bottom: 0;
 }
