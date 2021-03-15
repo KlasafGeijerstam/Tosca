@@ -68,7 +68,7 @@ def invalid_token_post():
         "name": "Black market",
         "info": "Black markets are not allowed on Tosca."
     }
-    response = requests.post(API_BASE_URL + "workspaces", headers=normal_headers, verify=False, json=data)
+    response = requests.post(API_BASE_URL + "workspaces", headers=invalid_headers, verify=False, json=data)
     if response.status_code != 401:
         raise AssertionError(f"Posting with invalid token, expected status 401 got {response.status_code}")
 
