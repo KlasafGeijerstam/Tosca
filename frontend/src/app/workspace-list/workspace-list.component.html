@@ -5,7 +5,7 @@
       </mat-card-header>
       <img mat-card-image src="{{ workspace.img }}" alt="Workspace image"/>
       <mat-card-content>
-        <p id="workspace-desc">{{ workspace.description }}</p>
+        <p id="workspace-desc">{{ workspace.info }}</p>
       </mat-card-content>
       <mat-card-actions>
         <a mat-raised-button color="primary" href="queues">Waiting list</a>
@@ -13,7 +13,7 @@
       </mat-card-actions>
     </mat-card>
 </div>
-<button class="mat-fab-bottom-right" mat-raised-button color="accent">
+<button class="mat-fab-bottom-right" mat-raised-button color="accent" (click)="onAddWorkspace()">
   <mat-icon class="icon">add</mat-icon>Add Workspace
 </button>
 
