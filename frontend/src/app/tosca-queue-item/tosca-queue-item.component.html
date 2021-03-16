@@ -1,6 +1,11 @@
 <div class="queue-item">
   <div class="user-info">
-    <h3>{{ index + 1 }} {{ name }} - {{ username }}</h3>
+    <h3>
+      {{ index + 1 }} {{ name }} - {{ username }}
+      <span *ngIf="adminView">
+        <button mat-icon-button><mat-icon svgIcon="tabler-message-circle" color="primary"></mat-icon></button>
+      </span>
+    </h3>
     <p *ngIf="adminView">{{ message }}</p>
     <a *ngIf="adminView && link" href="{{ link }}">{{ link }}</a>
   </div>
