@@ -2,20 +2,21 @@
   display: flex;
   align-items: flex-start;
   background-color: var(--tosca-primary-color);
-  min-height: 60px;
+  min-height: 4rem;
 }
 
 #title {
-  margin: 10px 5px 5px 20px;
+  margin: auto 0 auto 1.2rem;
   font-size: 52px;
+  padding: 10px;
 }
 
 img {
-  margin: 10px 5px 5px 10px;
+  margin: auto auto auto 0.5rem;
 }
 
 #user-name {
-  margin: 10px 20px 5px auto;
+  margin: auto 1.2rem auto auto;
   color: var(--tosca-primary-text);
 }
 
@@ -23,4 +24,5 @@ img {
   display: flex;
   text-decoration: none;
   color: var(--tosca-primary-text);
+  margin-top: auto;
 }
