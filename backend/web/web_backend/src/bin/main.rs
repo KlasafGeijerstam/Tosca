@@ -13,6 +13,8 @@ use web_backend::user_provider::{UserData, UserProvider, SuperUser, AdminUser, N
 use web_backend::login_provider::LoginProvider;
 use web_backend::api;
 
+use actix_cors::Cors;
+
 #[derive(StructOpt)]
 #[structopt(name = "Tosca REST-backend")]
 struct Arguments {
@@ -122,7 +124,9 @@ async fn main() -> std::io::Result<()> {
     println!("Using user provider: {}", config.user_provider);
 
     HttpServer::new(move || {
+        let cors = Cors::permissive();
         App::new()
+            .wrap(cors)
             .wrap(middleware::NormalizePath::new(middleware::normalize::TrailingSlash::Trim))
             .wrap(middleware::Logger::default())
             .data(db_pool.clone())
