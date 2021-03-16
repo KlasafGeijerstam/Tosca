@@ -39,3 +39,16 @@ mat-card-actions {
   margin-left:0;
   margin-bottom: 0;
 }
+.mat-fab-bottom-right {
+  top: auto !important;
+  right: 1rem !important;
+  bottom: 1rem !important;
+  left: auto !important;
+  position: fixed !important;
+  border-radius: 1000px;
+}
+
+.mat-fab-bottom-right mat-icon {
+  margin-left: -1rem;
+  line-height: inherit;
+}
