@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { workspaces } from "../workspaces";
+import {Workspace, WorkspacesService} from '../workspaces.service';
 
 @Component({
   selector: 'app-workspace-list',
@@ -7,11 +7,29 @@ import { workspaces } from "../workspaces";
   styleUrls: ['./workspace-list.component.css']
 })
 export class WorkspaceListComponent implements OnInit {
-  workspaces = workspaces;
-  constructor() { }
-
+  constructor(private workspacesService: WorkspacesService) { }
+  workspaces: Workspace[] = [];
 
   ngOnInit(): void {
+    this.getWorkspaces();
   }
 
+  getWorkspaces(): void {
+    this.workspacesService.getWorkspaces()
+      .subscribe(workspaces => this.workspaces = workspaces);
+  }
+
+  putWorkspace(workspace: Workspace): void {
+    this.workspacesService.putWorkspace(workspace);
+  }
+
+  onAddWorkspace(): void {
+    this.putWorkspace({
+      name: 'Workspace Name',
+      creator: 'Creator',
+      info: 'Workspace Info',
+      workspaceId: 1,
+      img: 'assets/genericCardImg.png'
+    });
+  }
 }
