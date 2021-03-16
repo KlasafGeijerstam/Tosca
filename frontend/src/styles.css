@@ -15,6 +15,10 @@ body {
   margin: 2% 10% 2% 10%;
 }
 
+a {
+  word-break: break-word;
+}
+
 :root {
   --tosca-primary-color: #104f55;
   --tosca-accent-color: #903c5c;

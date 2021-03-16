@@ -15,7 +15,7 @@ export let studentQueue = [
     name: 'Fredrik',
     username: 'frepet',
     message: 'Need help with loops again, whoops!',
-    link: 'www.google.se'
+    link: 'https://www.google.se/search?q=harry+potter+year+4&tbm=isch&sxsrf=ALeKk00BxmD6D8RZ1QxoDYWLXJPk4D0P-A%3A1615890360164&source=hp&biw=1280&bih=698&ei=uIdQYO6QCIm0Uo-3tLAK&oq=&gs_lcp=CgNpbWcQARgFMgcIIxDqAhAnMgcIIxDqAhAnMgcIIxDqAhAnMgcIIxDqAhAnMgcIIxDqAhAnMgcIIxDqAhAnMgcIIxDqAhAnMgcIIxDqAhAnMgcIIxDqAhAnMgcIIxDqAhAnUABYAGC1PGgBcAB4AIABAIgBAJIBAJgBAKoBC2d3cy13aXotaW1nsAEK&sclient=img#imgrc=K1l5sEdNbC14iM'
   },
   {
     id: 3,
