@@ -1,17 +1,59 @@
-<mat-card class="container">
-  <mat-card-title>
-    QueueName
-  </mat-card-title>
-  <mat-card-subtitle>
-      Here is some info about the list.
-  </mat-card-subtitle>
-  <mat-card-content>
-    <app-tosca-queue-item *ngFor="let student of studentQueue"
-                          [id]="student.id"
-                          [name]="student.name"
-                          [username]="student.username"
-                          [message]="student.message"
-                          [link]="student.link">
-    </app-tosca-queue-item>
-  </mat-card-content>
-</mat-card>
+<div class="container">
+  <div class="flex">
+    <h1 style="font-weight: bold">
+      QueueName
+    </h1>
+    <mat-slide-toggle [labelPosition]="'before'" [(ngModel)]="adminView">Admin view</mat-slide-toggle>
+  </div>
+  <p>
+    Here is some info about the list. There is probably going to be more text here than
+    just one sentence, so we might as well write some more text. If you have ever seen
+    a shorter description than this, then maybe we should try using that one as well.
+    Otherwise, this should do it.
+  </p>
+
+  <mat-card *ngIf="adminView" class="no-header">
+    <mat-card-content>
+      <app-tosca-queue-item *ngFor="let student of studentQueue; last as last"
+                            [id]="student.id"
+                            [name]="student.name"
+                            [username]="student.username"
+                            [message]="student.message"
+                            [link]="student.link"
+                            [last]="last">
+      </app-tosca-queue-item>
+
+    </mat-card-content>
+  </mat-card>
+
+  <!-- User view defined below -->
+  <mat-card *ngIf="!adminView">
+    <form>
+      <mat-card-content id="form-container">
+        <mat-form-field>
+          <input type="text" matInput placeholder="Message/Location">
+        </mat-form-field>
+        <mat-form-field>
+          <input type="url" pattern="https://.*" matInput placeholder="Link (Optional)">
+        </mat-form-field>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button type="submit" mat-raised-button color="primary" (click)="signup('hej', 'hejurl')">Sign up</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+
+  <br/>
+
+  <mat-card *ngIf="!adminView" class="no-header">
+    <mat-card-content>
+      <mat-list>
+        <mat-list-item *ngFor="let student of studentQueue; index as i; last as last">
+          {{ i + 1 }} {{ student.name }} ({{ student.username }})
+          <mat-divider *ngIf="!last"></mat-divider>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+</div>

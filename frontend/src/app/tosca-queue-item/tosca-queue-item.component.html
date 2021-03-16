@@ -1,4 +1,4 @@
-<mat-divider></mat-divider>
+
 <div class="queue-item">
   <div class="user-info">
     <h3>{{ name }} - {{ username }}</h3>
@@ -13,6 +13,7 @@
             (click)="claim()"
             title="{{ claimedBy }}"
     >{{ claimed ? 'Unclaim' : 'Claim' }}</button>
-    <button mat-raised-button color="primary">MsgIcon</button>
   </div>
 </div>
+
+<mat-divider *ngIf="!last"></mat-divider>

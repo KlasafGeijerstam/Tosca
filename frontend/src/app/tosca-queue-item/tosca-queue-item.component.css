@@ -23,10 +23,6 @@ a {
   color: var(--tosca-primary-color);
 }
 
-button {
-  margin: 1rem;
-}
-
 #claimed-button {
   width: 6em;
 }
