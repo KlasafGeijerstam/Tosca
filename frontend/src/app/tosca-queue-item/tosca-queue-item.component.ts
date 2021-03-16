@@ -12,6 +12,8 @@ export class ToscaQueueItemComponent implements OnInit {
   @Input() message: string;
   @Input() link: string;
   @Input() last: boolean;
+  @Input() adminView: boolean;
+  @Input() index: number;
   claimed: boolean;
   claimedBy: string;
 

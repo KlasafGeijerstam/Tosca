@@ -1,12 +1,11 @@
-
 <div class="queue-item">
   <div class="user-info">
-    <h3>{{ name }} - {{ username }}</h3>
-    <p>{{ message }}</p>
-    <a *ngIf="link" href="{{ link }}">{{ link }}</a>
+    <h3>{{ index + 1 }} {{ name }} - {{ username }}</h3>
+    <p *ngIf="adminView">{{ message }}</p>
+    <a *ngIf="adminView && link" href="{{ link }}">{{ link }}</a>
   </div>
 
-  <div class="buttons">
+  <div *ngIf="adminView">
     <button mat-raised-button
             id="claimed-button"
             color="{{ claimed ? 'warn' : 'primary' }}"
@@ -16,4 +15,4 @@
   </div>
 </div>
 
-<mat-divider *ngIf="!last"></mat-divider>
+<mat-divider [inset]="true" *ngIf="!last"></mat-divider>

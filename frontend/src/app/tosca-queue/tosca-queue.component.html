@@ -12,21 +12,6 @@
     Otherwise, this should do it.
   </p>
 
-  <mat-card *ngIf="adminView" class="no-header">
-    <mat-card-content>
-      <app-tosca-queue-item *ngFor="let student of studentQueue; last as last"
-                            [id]="student.id"
-                            [name]="student.name"
-                            [username]="student.username"
-                            [message]="student.message"
-                            [link]="student.link"
-                            [last]="last">
-      </app-tosca-queue-item>
-
-    </mat-card-content>
-  </mat-card>
-
-  <!-- User view defined below -->
   <mat-card *ngIf="!adminView">
     <form>
       <mat-card-content id="form-container">
@@ -46,14 +31,18 @@
 
   <br/>
 
-  <mat-card *ngIf="!adminView" class="no-header">
+  <mat-card class="no-header">
     <mat-card-content>
-      <mat-list>
-        <mat-list-item *ngFor="let student of studentQueue; index as i; last as last">
-          {{ i + 1 }} {{ student.name }} ({{ student.username }})
-          <mat-divider *ngIf="!last"></mat-divider>
-        </mat-list-item>
-      </mat-list>
+      <app-tosca-queue-item *ngFor="let student of studentQueue; index as i; last as last"
+                            [id]="student.id"
+                            [name]="student.name"
+                            [username]="student.username"
+                            [message]="student.message"
+                            [link]="student.link"
+                            [last]="last"
+                            [adminView]="adminView"
+                            [index]="i">
+      </app-tosca-queue-item>
     </mat-card-content>
   </mat-card>
 </div>

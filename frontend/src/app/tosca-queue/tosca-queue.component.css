@@ -25,3 +25,11 @@ mat-form-field {
   flex-grow: 0;
   margin-right: 0;
 }
+
+.mat-card-content {
+  margin-bottom: 0;
+}
+.mat-card-actions {
+  padding: 0;
+  margin: 0;
+}

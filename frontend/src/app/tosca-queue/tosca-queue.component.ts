@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { studentQueue } from '../studentqueue'
+import { studentQueue } from '../studentqueue';
 
 @Component({
   selector: 'app-tosca-queue',
@@ -7,14 +7,14 @@ import { studentQueue } from '../studentqueue'
   styleUrls: ['./tosca-queue.component.css']
 })
 export class ToscaQueueComponent implements OnInit {
-  studentQueue = studentQueue
-  adminView = true
+  studentQueue = studentQueue;
+  adminView = true;
   constructor() { }
 
   ngOnInit(): void {
   }
 
   signup(msg: string, url: string): void {
-    this.studentQueue.push({name: "The New Student", link: url, id: 30, message: msg, username: "unknown"})
+    this.studentQueue.push({name: 'The New Student', link: url, id: 30, message: msg, username: 'unknown'})
   }
 }
