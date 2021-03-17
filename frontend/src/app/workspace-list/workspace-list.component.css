@@ -24,6 +24,10 @@ mat-card-title {
   color: var(--tosca-primary-color);
 }
 
+::ng-deep .mat-card-header-text {
+  margin: 0 !important;
+}
+
 mat-icon {
   color: var(--tosca-primary-text);
   width: 1.5em;
