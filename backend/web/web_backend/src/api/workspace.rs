@@ -46,7 +46,7 @@ async fn add_workspace(db_pool: DbPool, user: UserData<AdminUser>, wspace: Json<
             error!("Failed to add workspace: {:?}", e);
             HttpResponse::InternalServerError().finish()
         })?;
-    Ok(HttpResponse::Ok().finish())
+    Ok(HttpResponse::Ok().json(result))
 }
 
 //* GET `/workspaces`
