@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { WorkspaceListComponent } from './workspace-list/workspace-list.component';
+import { AddWorkspaceDialogComponent, WorkspaceListComponent } from './workspace-list/workspace-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,11 +18,13 @@ import { FooterComponent } from './footer/footer.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { ToscaSignupComponent } from './tosca-signup/tosca-signup.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
     AppComponent,
     WorkspaceListComponent,
+    AddWorkspaceDialogComponent,
     ToscaQueueComponent,
     ToscaQueueItemComponent,
     HeaderComponent,
@@ -42,6 +44,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatSlideToggleModule,
     FormsModule,
     MatDividerModule,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
