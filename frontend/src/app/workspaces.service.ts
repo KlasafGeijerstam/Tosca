@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 
 export interface Workspace {
-  workspaceId: number;
+  workspace_id: number;
   creator: string;
   name: string;
   info: string;
@@ -15,7 +15,6 @@ export interface Workspace {
   providedIn: 'root'
 })
 export class WorkspacesService {
-  private placeholderData: Workspace[] = [];
   private apiUrl = 'https://localhost:25674/api/workspaces';
 
   constructor(
@@ -24,19 +23,22 @@ export class WorkspacesService {
 
   getWorkspaces(): Observable<Workspace[]> {
     const headers = new HttpHeaders({Authorization: 'Bearer token_admin'});
-    return this.http.get<Workspace[]>(this.apiUrl, {headers}).pipe(
+    return this.http.get<Workspace[]>(this.apiUrl, {headers});/*.pipe(
       catchError(this.handleError<Workspace[]>('getWorkspaces', []))
-    );
+    );*/
   }
 
-  putWorkspace(workspace: Workspace): void {
-    this.placeholderData.push(workspace);
+  putWorkspace(workspace: Workspace): Observable<Workspace> {
+    const headers = new HttpHeaders({Authorization: 'Bearer token_admin'});
+    return this.http.post<Workspace>(this.apiUrl, workspace, {headers}); /*.pipe(
+      catchError(this.handleError<Workspace>('putWorkspaces'))
+    );*/
   }
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);
-      return of(result as T);
+      throw Error('Backend error');
     };
   }
 }

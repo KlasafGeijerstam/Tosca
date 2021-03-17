@@ -1,0 +1,14 @@
+<mat-dialog-content>
+  <mat-form-field>
+    <input matInput [(ngModel)]="newWorkspace.name" placeholder="Name">
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <textarea matInput [(ngModel)]="newWorkspace.info" placeholder="Info" cdkTextareaAutosize></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="newWorkspace">Create</button>
+</mat-dialog-actions>
+
