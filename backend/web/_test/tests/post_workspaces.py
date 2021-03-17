@@ -27,6 +27,17 @@ def expected_in_response(expected):
         raise AssertionError("Expected at least one workspace with correct name, creator and info.")
 
 
+def check_response(response, expected):
+    """ Helper function to check if response is correct """
+    json = response.json()
+    if json["name"] != expected["name"]:
+        raise AssertionError(f"Returned name differs. Got: {json['name']}, Expected: {expected['name']}.")
+    if json["info"] != expected["info"]:
+        raise AssertionError(f"Returned info differs. Got: {json['info']}, Expected: {expected['info']}.")
+    if json['creator'] != expected["creator"]:
+        raise AssertionError(f"Returned creator differs. Got: {json['creator']}, Expected: {expected['creator']}.")
+
+
 def normal_post():
     data = {
         "name": "Normal workspace",
@@ -47,6 +58,7 @@ def admin_post():
         raise AssertionError(f"Posting as admin user, expected status 200 got {response.status_code}")
 
     data["creator"] = "admin"
+    check_response(response, data)
     expected_in_response(data)
 
 
@@ -60,6 +72,7 @@ def super_post():
         raise AssertionError(f"Posting as super user, expected status 200 got {response.status_code}")
 
     data["creator"] = "super"
+    check_response(response, data)
     expected_in_response(data)
 
 

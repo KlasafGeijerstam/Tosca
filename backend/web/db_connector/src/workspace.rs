@@ -78,11 +78,11 @@ pub fn get_workspace(
 }
 
 /// Stores a new workspace.
-pub fn add_workspace(con: &DbConnection, wspace: &NewWorkspace) -> Result<usize> {
+pub fn add_workspace(con: &DbConnection, wspace: &NewWorkspace) -> Result<Workspace> {
     use schema::workspace::dsl::*;
     diesel::insert_into(workspace)
         .values(wspace)
-        .execute(con)
+        .get_result::<Workspace>(con)
         .map_err(|e| anyhow!("Failed to insert new workspace: {:?}", e))
 }
 
