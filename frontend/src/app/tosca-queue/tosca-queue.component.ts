@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { studentQueue } from '../studentqueue';
+import { studentQueue } from '../mock';
 
 @Component({
   selector: 'app-tosca-queue',
