@@ -14,6 +14,7 @@ export class WorkspaceListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getWorkspaces();
+    setInterval(_ => this.getWorkspaces(), 10000);
   }
 
   getWorkspaces(): void {

@@ -2,6 +2,44 @@
  * Placeholder data
  */
 
+export let workspaces = [
+  {
+    workspace_id: 1,
+    name: 'Course In Science',
+    info: 'This is a course where we talk about science. What is science? Why is science valuable? NEWLINE HERE Please sign up to the waiting list for help during the lectures. Sign up to the seminar groups before 24/5.',
+    img: 'assets/genericCardImg.png',
+    creator: 'admin',
+  },
+  {
+    workspace_id: 2,
+    name: 'Course With Longer Name Than Expected',
+    info: 'This course has a very long name. To compensate, the description is short.',
+    img: 'assets/genericCardImg.png',
+    creator: 'admin',
+  },
+  {
+    workspace_id: 3,
+    name: 'Unexpected course',
+    info: 'I did not plan for this one, I have not come up with a description yet.',
+    img: 'assets/genericCardImg.png',
+    creator: 'admin',
+  },
+  {
+    workspace_id: 4,
+    name: 'Fourth course',
+    info: 'I did not plan for this one either, I have not come up with a description yet.',
+    img: 'assets/genericCardImg.png',
+    creator: 'admin',
+  },
+  {
+    workspace_id: 5,
+    name: 'Fifth course',
+    info: 'Well, who knew this course would exist? I have not come up with a description yet.',
+    img: 'assets/genericCardImg.png',
+    creator: 'admin',
+  }
+];
+
 export let studentQueue = [
   {
     id: 1,
