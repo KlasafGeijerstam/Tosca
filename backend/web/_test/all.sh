@@ -6,7 +6,18 @@ export DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@$PGHOST:$PGPORT/$PGDATABASE
 # Run migrations
 printf "[Migrations] Starting..\n"
 pushd db_connector
+mv src/schema.rs src/old_schema.rs # Save old version of schema.rs
+
 diesel --config-file diesel.toml migration --migration-dir migrations/ run
+
+# Check if we need to use the new schema
+if diff src/schema.rs src/old_schema.rs; then
+	printf "[Migrations] No changes in schema.rs, using old version\n"
+	mv src/old_schema.rs src/schema.rs
+else
+	printf "[Migrations] Changes in schema.rs, using new version\n"
+	rm src/old_schema.rs
+fi
 popd
 printf "[Migrations] DONE!\n"
 
