@@ -3,8 +3,8 @@ public_host = ""
 port = 25674
 
 # SSL Configuration for RusTLS
-certificate_file = "res/cert.pem"
-key_file = "res/key.pem"
+certificate_file = "res/localhost+2.pem"
+key_file = "res/localhost+2-key.pem"
 
 login_provider = "http://localhost:9000"
 user_provider = "http://localhost:8000"

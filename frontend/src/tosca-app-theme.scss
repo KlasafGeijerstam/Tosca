@@ -136,6 +136,10 @@ $tosca-plum: (
   )
 );
 
+$custom-typography: mat-typography-config(
+    $font-family: 'montserrat, regular'
+);
+
 $tosca-app-primary: mat-palette($tosca-blue);
 $tosca-app-accent: mat-palette($tosca-plum);
 $tosca-app-warn: mat-palette($tosca-orange);
@@ -149,3 +153,4 @@ $tosca-app-theme: mat-light-theme((
 ));
 
 @include angular-material-theme($tosca-app-theme);
+@include angular-material-typography($custom-typography);
