@@ -56,3 +56,7 @@ mat-card-actions {
   margin-left: -1rem;
   line-height: inherit;
 }
+
+.workspace-desc {
+    white-space: pre-wrap;
+}

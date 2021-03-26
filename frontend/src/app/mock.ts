@@ -6,7 +6,7 @@ export let workspaces = [
   {
     workspace_id: 1,
     name: 'Course In Science',
-    info: 'This is a course where we talk about science. What is science? Why is science valuable? NEWLINE HERE Please sign up to the waiting list for help during the lectures. Sign up to the seminar groups before 24/5.',
+    info: 'This is a course where we talk about science. What is science? Why is science valuable?\nPlease sign up to the waiting list for help during the lectures. Sign up to the seminar groups before 24/5.',
     img: 'assets/genericCardImg.png',
     creator: 'admin',
   },
