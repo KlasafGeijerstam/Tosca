@@ -6,8 +6,9 @@ edition = "2018"
 
 
 [dependencies]
-diesel = { version = "1", features = ["postgres", "r2d2"] }
+diesel = { version = "1", features = ["postgres", "r2d2", "chrono"] }
 r2d2 = "0.8.9"
 dotenv = "0.15.0"
 serde = { version = "1", features = ["derive"] }
 anyhow = "1"
+chrono = { version = "0.4", features = ["serde"] }

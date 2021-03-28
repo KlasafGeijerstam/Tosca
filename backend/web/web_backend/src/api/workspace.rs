@@ -1,20 +1,27 @@
-use actix_web::{web, web::Json, Error, Responder, HttpResponse, get, post, put, delete};
 use super::DbPool;
-use log::error;
+use actix_web::{delete, get, post, put, web, web::Json, Error, HttpResponse, Responder};
 use db_connector::workspace;
+use log::error;
 use serde::Deserialize;
 
 pub fn configure(cfg: &mut web::ServiceConfig) {
-    cfg.service(web::scope("/workspaces")
-        .service(get_workspaces)
-        .service(add_workspace));
+    cfg.service(
+        web::scope("/workspaces")
+            .service(get_workspaces)
+            .service(add_workspace),
+    );
 }
 
-use crate::user_provider::{UserData, AdminUser, SuperUser, NormalUser};
+use crate::user_provider::{AdminUser, NormalUser, SuperUser, UserData};
 
 #[get("")]
-async fn get_workspaces(db_pool: DbPool, _user: UserData<NormalUser>) -> Result<HttpResponse, Error> {
-    let con = db_pool.get().expect("Failed to get database handle from pool");
+async fn get_workspaces(
+    db_pool: DbPool,
+    _user: UserData<NormalUser>,
+) -> Result<HttpResponse, Error> {
+    let con = db_pool
+        .get()
+        .expect("Failed to get database handle from pool");
     let workspaces = web::block(move || workspace::get_workspaces(&con))
         .await
         .map_err(|e| {
@@ -32,20 +39,28 @@ struct AddWorkspace {
 }
 
 #[post("")]
-async fn add_workspace(db_pool: DbPool, user: UserData<AdminUser>, wspace: Json<AddWorkspace>) -> Result<HttpResponse, Error> {
-    let con = db_pool.get().expect("Failed to get database handle from pool");
-    let workspace = workspace::NewWorkspace {
-        creator: user.user_id,
-        info: wspace.info.clone(), 
-        name: wspace.name.clone(),
-    };
-    
-    let result = web::block(move || workspace::add_workspace(&con, &workspace))
-        .await
-        .map_err(|e| {
-            error!("Failed to add workspace: {:?}", e);
-            HttpResponse::InternalServerError().finish()
-        })?;
+async fn add_workspace(
+    db_pool: DbPool,
+    user: UserData<AdminUser>,
+    wspace: Json<AddWorkspace>,
+) -> Result<HttpResponse, Error> {
+    let con = db_pool
+        .get()
+        .expect("Failed to get database handle from pool");
+
+    let result = web::block(move || {
+        let workspace = workspace::NewWorkspace {
+            creator: &user.user_id,
+            info: &wspace.info,
+            name: &wspace.name,
+        };
+        workspace::add_workspace(&con, &workspace)
+    })
+    .await
+    .map_err(|e| {
+        error!("Failed to add workspace: {:?}", e);
+        HttpResponse::InternalServerError().finish()
+    })?;
     Ok(HttpResponse::Ok().json(result))
 }
 
@@ -58,4 +73,3 @@ async fn add_workspace(db_pool: DbPool, user: UserData<AdminUser>, wspace: Json<
 //* DELETE `/workspaces/{workspace_id}/whitelist/` [Super, Creator, Moderator]
 //* POST `/workspaces/{workspace_id}/whitelist` [Super, Creator, Moderator]
 //* DELETE `/workspaces/{workspace_id}/whitelist/{user_id}` [Super, Creator, Moderator]
-

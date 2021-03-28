@@ -2,6 +2,8 @@
 extern crate diesel;
 mod schema;
 
+pub mod queue;
+
 pub mod workspace;
 
 use diesel::pg::PgConnection;

@@ -4,40 +4,37 @@ use crate::schema;
 use crate::DbConnection;
 use anyhow::{anyhow, Result};
 use diesel::prelude::*;
-use schema::{moderator, whitelist, workspace};
+use schema::{moderators, whitelists, workspaces};
 use serde::{Deserialize, Serialize};
 
 #[derive(Identifiable, Queryable, Debug, Deserialize, Serialize)]
-#[primary_key("workspace_id")]
-#[table_name = "workspace"]
 pub struct Workspace {
-    pub workspace_id: i32,
+    pub id: i32,
     pub creator: String,
     pub name: String,
     pub info: String,
 }
 
 #[derive(Insertable, Debug, Deserialize, Serialize, AsChangeset)]
-#[table_name = "workspace"]
-pub struct NewWorkspace {
-    pub creator: String,
-    pub name: String,
-    pub info: String,
+#[table_name = "workspaces"]
+pub struct NewWorkspace<'a> {
+    pub creator: &'a str,
+    pub name: &'a str,
+    pub info: &'a str,
 }
 
 #[derive(Identifiable, Queryable, Associations, Insertable, Debug)]
-#[belongs_to(Workspace, foreign_key = "workspace_id")]
+#[belongs_to(Workspace)]
 #[primary_key(workspace_id, user_id)]
-#[table_name = "moderator"]
 pub struct Moderator {
     pub workspace_id: i32,
     pub user_id: String,
 }
 
 #[derive(Identifiable, Queryable, Associations, Insertable, Debug)]
-#[belongs_to(Workspace, foreign_key = "workspace_id")]
+#[belongs_to(Workspace)]
 #[primary_key(workspace_id, user_id)]
-#[table_name = "whitelist"]
+#[table_name = "whitelists"]
 pub struct WhitelistEntry {
     pub workspace_id: i32,
     pub user_id: String,
@@ -45,32 +42,35 @@ pub struct WhitelistEntry {
 
 /// Gets all stored workspaces. Does not fetch whitelist or moderators.
 pub fn get_workspaces(con: &DbConnection) -> Result<Vec<Workspace>> {
-    use schema::workspace::dsl::*;
-    workspace
+    use schema::workspaces::dsl::*;
+    workspaces
         .load::<Workspace>(con)
         .map_err(|x| anyhow!("Failed to load workspaces: {:?}", x))
+}
+
+/// Gets a workspace.
+pub fn get_workspace_only(con: &DbConnection, workspace_id: i32) -> Result<Workspace> {
+    workspaces::table
+        .find(workspace_id)
+        .first::<Workspace>(con)
+        .map_err(|x| anyhow!("Failed to find workspace with id {}: {:?}", workspace_id, x))
 }
 
 /// Gets a workspace. Loads the workspace moderators and whitelist.
 /// Returns a triple, `(Workspace, moderators: Vec<String>, whitelist: Vec<String>)`
 pub fn get_workspace(
     con: &DbConnection,
-    wspace_id: i32,
+    workspace_id: i32,
 ) -> Result<(Workspace, Vec<String>, Vec<String>)> {
-    let wspace = workspace::table
-        .find(wspace_id)
-        .first::<Workspace>(con)
-        .map_err(|x| anyhow!("Failed to find workspace with id {}: {:?}", wspace_id, x))?;
+    let wspace = get_workspace_only(con, workspace_id)?;
 
-    let moderators = moderator::table
-        .filter(moderator::workspace_id.eq(wspace.workspace_id))
-        .select(moderator::user_id)
+    let moderators = Moderator::belonging_to(&wspace)
+        .select(moderators::user_id)
         .load(con)
         .map_err(|x| anyhow!("Failed to load moderators for workspace: {:?}", x))?;
 
-    let whitelist = whitelist::table
-        .filter(whitelist::workspace_id.eq(wspace.workspace_id))
-        .select(whitelist::user_id)
+    let whitelist = WhitelistEntry::belonging_to(&wspace)
+        .select(whitelists::user_id)
         .load(con)
         .map_err(|x| anyhow!("Failed to load whitelist for workspace: {:?}", x))?;
 
@@ -78,9 +78,9 @@ pub fn get_workspace(
 }
 
 /// Stores a new workspace.
-pub fn add_workspace(con: &DbConnection, wspace: &NewWorkspace) -> Result<Workspace> {
-    use schema::workspace::dsl::*;
-    diesel::insert_into(workspace)
+pub fn add_workspace<'a>(con: &DbConnection, wspace: &NewWorkspace<'a>) -> Result<Workspace> {
+    use schema::workspaces::dsl::*;
+    diesel::insert_into(workspaces)
         .values(wspace)
         .get_result::<Workspace>(con)
         .map_err(|e| anyhow!("Failed to insert new workspace: {:?}", e))
@@ -94,7 +94,7 @@ pub fn add_moderator(con: &DbConnection, workspace_id: i32, new_mod: &str) -> Re
     };
 
     new_mod
-        .insert_into(moderator::table)
+        .insert_into(moderators::table)
         .execute(con)
         .map_err(|x| anyhow!("Failed to insert moderator: {:?}", x))
 }
@@ -119,7 +119,7 @@ pub fn add_whitelist_entry(con: &DbConnection, workspace_id: i32, user_id: &str)
     };
 
     to_add
-        .insert_into(whitelist::table)
+        .insert_into(whitelists::table)
         .execute(con)
         .map_err(|x| anyhow!("Failed to insert user into whitelist: {:?}", x))
 }
@@ -141,9 +141,13 @@ pub fn delete_whitelist_entry(
 }
 
 /// Updates the workspace with the given workspace id.
-pub fn update_workspace(con: &DbConnection, wspace_id: i32, wspace: &NewWorkspace) -> Result<usize> {
-    use schema::workspace::dsl::*;
-    let target = workspace.filter(workspace_id.eq(wspace_id));
+pub fn update_workspace<'a>(
+    con: &DbConnection,
+    workspace_id: i32,
+    wspace: &NewWorkspace<'a>,
+) -> Result<usize> {
+    use schema::workspaces::dsl::*;
+    let target = workspaces.filter(id.eq(workspace_id));
 
     diesel::update(target)
         .set(wspace)
