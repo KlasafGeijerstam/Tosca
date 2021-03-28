@@ -21,7 +21,7 @@ export let workspaces = [
     workspace_id: 3,
     name: 'Unexpected course',
     info: 'I did not plan for this one, I have not come up with a description yet.',
-    img: 'assets/genericCardImg.png',
+    img: 'assets/scienceImg.png',
     creator: 'admin',
   },
   {

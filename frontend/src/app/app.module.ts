@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatListModule } from '@angular/material/list';
 import { FormsModule } from '@angular/forms';
 import { ToscaQueueComponent } from './tosca-queue/tosca-queue.component';
 import { ToscaQueueItemComponent } from './tosca-queue-item/tosca-queue-item.component';
@@ -19,7 +20,7 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { ToscaSignupComponent } from './tosca-signup/tosca-signup.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatListModule } from '@angular/material/list';
+import { ToscaWorkspaceComponent } from './tosca-workspace/tosca-workspace.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { MatListModule } from '@angular/material/list';
     FooterComponent,
     NavBarComponent,
     ToscaSignupComponent,
+    ToscaWorkspaceComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,10 +45,10 @@ import { MatListModule } from '@angular/material/list';
     MatButtonModule,
     MatInputModule,
     MatSlideToggleModule,
+    MatListModule,
     FormsModule,
     MatDividerModule,
     MatDialogModule,
-    MatListModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,0 +1,25 @@
+<mat-dialog-content>
+  <h1 mat-dialog-title> {{ workspace.name }}</h1>
+  <p class="info">{{ workspace.info }}</p>
+
+  <mat-card>
+    <mat-list>
+      <mat-list-item><a href="queues">Queue 1</a></mat-list-item>
+      <mat-divider [inset]="true"></mat-divider>
+      <mat-list-item><a href="queues">Queue 2</a></mat-list-item>
+      <mat-divider [inset]="true"></mat-divider>
+      <mat-list-item><a href="queues">Queue 3</a></mat-list-item>
+
+      <mat-divider></mat-divider>
+      <mat-list-item><a href="signups">Signup 1</a></mat-list-item>
+      <mat-divider [inset]="true"></mat-divider>
+      <mat-list-item><a href="signups">Signup 2</a></mat-list-item>
+      <mat-divider [inset]="true"></mat-divider>
+      <mat-list-item><a href="signups">Signup 3</a></mat-list-item>
+    </mat-list>
+  </mat-card>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button mat-dialog-close color="warn">Close</button>
+</mat-dialog-actions>

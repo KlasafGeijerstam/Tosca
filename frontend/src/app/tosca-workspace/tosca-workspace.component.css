@@ -1,0 +1,8 @@
+mat-card {
+  margin: 0 0 2em 0;
+}
+
+.info {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+}

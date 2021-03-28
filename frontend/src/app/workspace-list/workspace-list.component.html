@@ -2,11 +2,13 @@
   <h1 *ngIf="!connection">No connection with server.</h1>
   <h1 *ngIf="connection && workspaces.length == 0">You are not a member of any Workspaces.</h1>
   <mat-card *ngFor="let workspace of workspaces">
-    <mat-card-header>
+    <mat-card-header (click)="onFocusWorkspace(workspace)">
       <mat-card-title>{{ workspace.name }}</mat-card-title>
+
     </mat-card-header>
-    <img mat-card-image src="{{ workspace.img ? workspace.img : 'assets/genericCardImg.png' }}" alt="Workspace image"/>
-    <mat-card-content>
+    <img mat-card-image src="{{ workspace.img ? workspace.img : 'assets/genericCardImg.png' }}" alt="Workspace image" (click)="onFocusWorkspace(workspace)"/>
+
+    <mat-card-content (click)="onFocusWorkspace(workspace)">
       <p class="workspace-desc">{{ workspace.info }}</p>
     </mat-card-content>
     <mat-card-actions>

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Workspace, WorkspacesService } from '../workspaces.service';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { ToscaWorkspaceComponent } from '../tosca-workspace/tosca-workspace.component';
 
 @Component({
   selector: 'app-workspace-list',
@@ -8,7 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./workspace-list.component.css']
 })
 export class WorkspaceListComponent implements OnInit {
-  constructor(private workspacesService: WorkspacesService, public dialog: MatDialog) { }
+  constructor(private workspacesService: WorkspacesService, public dialog: MatDialog, private router: Router) { }
   workspaces: Workspace[] = [];
   connection = false;
 
@@ -48,6 +50,11 @@ export class WorkspaceListComponent implements OnInit {
         this.putWorkspace(result);
       }
     });
+  }
+
+  onFocusWorkspace(workspace: Workspace): void {
+    const dialogRef = this.dialog.open(ToscaWorkspaceComponent, { data: workspace });
+    dialogRef.updateSize('75%');
   }
 }
 
