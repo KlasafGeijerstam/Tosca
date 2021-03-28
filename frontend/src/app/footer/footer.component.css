@@ -5,7 +5,18 @@
   font-style: oblique;
   font-weight: bold;
   text-align: center;
-  background-color: var(--tosca-accent-color)/* #113e43; */
+  background-color: var(--tosca-accent-color);/* #113e43; */
+  margin-top: auto;
+}
+
+.test {
+  flex-grow: 1;
+  margin-top: auto;
+}
+
+:host {
+  display: flex;
+  margin-top: auto;
 }
 
 p {

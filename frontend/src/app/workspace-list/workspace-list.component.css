@@ -58,8 +58,8 @@ mat-card-actions {
 
 .mat-fab-bottom-right {
   top: auto !important;
-  right: 1rem !important;
-  bottom: 1rem !important;
+  right: 2rem !important;
+  bottom: 4rem !important;
   left: auto !important;
   position: fixed !important;
   border-radius: 1000px;
