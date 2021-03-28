@@ -37,6 +37,15 @@ def check_response(response, expected):
     if json['creator'] != expected["creator"]:
         raise AssertionError(f"Returned creator differs. Got: {json['creator']}, Expected: {expected['creator']}.")
 
+def get_empty_workspaces():
+    response = requests.get(API_BASE_URL + "workspaces", headers=admin_headers, verify=False)
+
+    if response.status_code != 200:
+        raise AssertionError(f"Expected status 200 got {response.status_code}")
+
+    if response.json() != []:
+        raise AssertionError(f"Expected [] got {response.json()}")
+
 
 def normal_post():
     data = {
@@ -87,6 +96,7 @@ def invalid_token_post():
 
 
 try:
+    get_empty_workspaces()
     admin_post()
     normal_post()
     super_post()
@@ -96,5 +106,3 @@ try:
 except AssertionError as exception:
     print(exception)
     sys.exit(1)
-
-
