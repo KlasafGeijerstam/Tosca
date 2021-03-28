@@ -58,5 +58,7 @@ mat-card-actions {
 }
 
 .workspace-desc {
-    white-space: pre-wrap;
+  white-space: pre-wrap;
+  max-height: 12rem;
+  overflow: auto;
 }

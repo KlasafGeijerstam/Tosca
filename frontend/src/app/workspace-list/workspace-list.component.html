@@ -5,7 +5,7 @@
     <mat-card-header>
       <mat-card-title>{{ workspace.name }}</mat-card-title>
     </mat-card-header>
-    <img *ngIf='workspace.img' mat-card-image src="{{ workspace.img }}" alt="Workspace image"/>
+    <img mat-card-image src="{{ workspace.img ? workspace.img : 'assets/genericCardImg.png' }}" alt="Workspace image"/>
     <mat-card-content>
       <p class="workspace-desc">{{ workspace.info }}</p>
     </mat-card-content>
