@@ -21,8 +21,9 @@ export PGPORT=5432
 export PGDATABASE=postgres
 export DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@$PGHOST:$PGPORT/$PGDATABASE
 
-# Replace with loop checking that posgres is up..
-sleep 2
+while ! pg_isready -d $PGDATABASE -h $PGHOST -p $PGPORT -U $PGUSER -t 10; do
+    sleep 1
+done
 
 echo "[Database] Started!"
 
