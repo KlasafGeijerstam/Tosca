@@ -10,12 +10,16 @@
       <p class="workspace-desc">{{ workspace.info }}</p>
     </mat-card-content>
     <mat-card-actions>
-      <a mat-raised-button color="primary" href="queues">Waiting list</a>
-      <a mat-raised-button color="primary" href="signups">Seminar</a>
+    <mat-divider></mat-divider>
+    <mat-nav-list>
+      <a mat-list-item href="queues"><mat-icon svgIcon="tabler-users" color="primary"></mat-icon>Tutoring</a>
+      <a mat-list-item href="queues"><mat-icon svgIcon="tabler-users" color="primary"></mat-icon>Examination</a>
+      <a mat-list-item href="signups"><mat-icon svgIcon="tabler-user-check" color="primary"></mat-icon>Project Groups</a>
+    </mat-nav-list>
     </mat-card-actions>
   </mat-card>
 </div>
-<button class="mat-fab-bottom-right" mat-raised-button color="accent" (click)="onAddWorkspace()">
-  <mat-icon class="icon">add</mat-icon>Add Workspace
+<button class="mat-fab-bottom-right" mat-raised-button color="accent" (click)="onAddWorkspace()" title="Add Workspace">
+  <mat-icon svgIcon="tabler-plus"></mat-icon>Add Workspace
 </button>
 

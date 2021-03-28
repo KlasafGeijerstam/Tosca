@@ -42,12 +42,20 @@ mat-card img {
 mat-card-content {
   color: var(--tosca-text-color);
   flex-grow: 1;
+  margin-bottom: 0;
 }
 
 mat-card-actions {
   margin-left:0;
   margin-bottom: 0;
 }
+
+.mat-list-base .mat-list-item {
+  padding-top: 0;
+  font-size: 1rem;
+  height: 2rem;
+}
+
 .mat-fab-bottom-right {
   top: auto !important;
   right: 1rem !important;
@@ -60,6 +68,7 @@ mat-card-actions {
 .mat-fab-bottom-right mat-icon {
   margin-left: -1rem;
   line-height: inherit;
+  vertical-align: text-bottom;
 }
 
 .workspace-desc {
