@@ -7,7 +7,7 @@ export let workspaces = [
     workspace_id: 1,
     name: 'Course In Science',
     info: 'This is a course where we talk about science. What is science? Why is science valuable?\n\nPlease sign up to the waiting list for help during the lectures. Sign up to the seminar groups before 24/5.',
-    img: 'assets/genericCardImg.png',
+    img: 'assets/scienceImg.png',
     creator: 'admin',
   },
   {
@@ -35,7 +35,7 @@ export let workspaces = [
     workspace_id: 5,
     name: 'Fifth course',
     info: 'Well, who knew this course would exist? I have not come up with a description yet.',
-    img: 'assets/genericCardImg.png',
+    img: 'assets/tallImg.png',
     creator: 'admin',
   },
   {
