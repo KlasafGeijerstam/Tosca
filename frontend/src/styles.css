@@ -24,10 +24,11 @@ html, body {
 body {
   margin: 0;
   background-color: var(--tosca-bg-color);
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
-  height: 100%;
   margin: 2% 10% 2% 10%;
 }
 
@@ -39,7 +40,6 @@ a {
   --tosca-primary-color: #104f55;
   --tosca-accent-color: #903c5c;
   --tosca-warn-color: #df6630;
-
   --tosca-primary-text: #ffffff;
   --tosca-accent-text: #ffffff;
   --tosca-warn-text: #000000;
