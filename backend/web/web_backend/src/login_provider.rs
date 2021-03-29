@@ -1,7 +1,7 @@
 use anyhow::Result;
+use log::debug;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use log::debug;
 
 #[derive(Serialize)]
 struct Token<'a> {
@@ -42,7 +42,6 @@ impl LoginProvider {
     /// Perform a (cached) lookup, converts a session token to a user-id
     /// TODO: Handle token expiration
     pub async fn lookup(&self, token: &str) -> Result<String> {
-        
         debug!("LoginProvider: {} not in cache, performing lookup", token);
 
         let response = self

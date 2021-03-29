@@ -9,9 +9,9 @@ use serde::{Deserialize, Serialize};
 use structopt::StructOpt;
 
 use db_connector::create_db_pool;
-use web_backend::user_provider::{UserData, UserProvider, SuperUser, AdminUser, NormalUser };
-use web_backend::login_provider::LoginProvider;
 use web_backend::api;
+use web_backend::login_provider::LoginProvider;
+use web_backend::user_provider::{AdminUser, NormalUser, SuperUser, UserData, UserProvider};
 
 use actix_cors::Cors;
 
@@ -38,7 +38,10 @@ struct DatabaseConfig {
 
 impl DatabaseConfig {
     pub fn to_url(&self) -> String {
-        format!("postgres://{}:{}@{}:{}/{}", self.user, self.password, self.host, self.port, self.database)
+        format!(
+            "postgres://{}:{}@{}:{}/{}",
+            self.user, self.password, self.host, self.port, self.database
+        )
     }
 }
 
@@ -92,7 +95,6 @@ async fn admin_user(user: UserData<AdminUser>) -> impl Responder {
     HttpResponse::Ok().body(format!("Hello! {:?}", user))
 }
 
-
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let args = Arguments::from_args();
@@ -101,7 +103,7 @@ async fn main() -> std::io::Result<()> {
     let cfg = load_ssl_keys(&config);
 
     pretty_env_logger::init();
-    
+
     let db_url = if let Some(url) = args.database {
         url
     } else {
@@ -119,7 +121,7 @@ async fn main() -> std::io::Result<()> {
         "Tosca REST-backend listening on https://localhost:{}",
         config.port
     );
-    
+
     println!("Using login provider: {}", config.login_provider);
     println!("Using user provider: {}", config.user_provider);
 
@@ -127,7 +129,9 @@ async fn main() -> std::io::Result<()> {
         let cors = Cors::permissive();
         App::new()
             .wrap(cors)
-            .wrap(middleware::NormalizePath::new(middleware::normalize::TrailingSlash::Trim))
+            .wrap(middleware::NormalizePath::new(
+                middleware::normalize::TrailingSlash::Trim,
+            ))
             .wrap(middleware::Logger::default())
             .data(db_pool.clone())
             .app_data(user_provider.clone())
