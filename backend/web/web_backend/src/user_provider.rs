@@ -1,14 +1,14 @@
+use crate::login_provider::LoginProvider;
 use actix_web::http::header::Header;
 use actix_web::{error::ErrorUnauthorized, web, Error, FromRequest, HttpRequest};
 use actix_web_httpauth::headers::authorization::{Authorization, Bearer};
 use anyhow::bail;
+use futures::Future;
+use log::debug;
 use reqwest::Client;
+use serde::Deserialize;
 use std::marker::PhantomData;
 use std::pin::Pin;
-use futures::Future;
-use crate::login_provider::LoginProvider;
-use log::debug;
-use serde::Deserialize;
 
 #[derive(Debug)]
 pub struct UserData<L: UserLevel> {
@@ -49,7 +49,7 @@ impl UserProvider {
             api_host: api_host.into(),
         }
     }
-    
+
     /// Gets UserData for a user_id. Returns `Err` if the user does not exist,
     /// or if the user associated with the user_id lacks permissions (greater permission value) (`L`).
     pub async fn get_user<L: UserLevel>(&self, user_id: &str) -> anyhow::Result<UserData<L>> {
@@ -83,7 +83,8 @@ impl UserProvider {
     /// TODO: Make UserProvider actually use a configured user provider to fetch data
     /// TODO: Cache lookups to user provider
     async fn get_user_from_provider(&self, user_id: &str) -> anyhow::Result<RemoteUser> {
-        let user = self.client
+        let user = self
+            .client
             .get(&format!("{}/users/{}", self.api_host, user_id))
             .send()
             .await?
@@ -126,7 +127,9 @@ where
 
                     let user_id = match login_provider.lookup(&token).await {
                         Ok(user_id) => user_id,
-                        Err(error) => return Err(ErrorUnauthorized(format!("Unauthorized: {:?}", error)))
+                        Err(error) => {
+                            return Err(ErrorUnauthorized(format!("Unauthorized: {:?}", error)))
+                        }
                     };
 
                     debug!("Token matches user {}", user_id);
@@ -136,11 +139,11 @@ where
                         Err(error) => Err(ErrorUnauthorized(format!("Unauthorized: {:?}", error))),
                     }
                 })
-            },
+            }
             Err(error) => {
-                Box::pin(async move {
-                    Err(ErrorUnauthorized(format!("Unauthorized: {:?}", error)))
-                })
+                Box::pin(
+                    async move { Err(ErrorUnauthorized(format!("Unauthorized: {:?}", error))) },
+                )
             }
         }
     }

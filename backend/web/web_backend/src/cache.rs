@@ -1,8 +1,7 @@
-use tokio::sync::RwLock;
-use std::collections::HashMap;
 use std::cmp::Eq;
+use std::collections::HashMap;
 use std::hash::Hash;
-
+use tokio::sync::RwLock;
 
 /// TODO: Evaluate if crate `cached` should be used instead.
 /// Put max size on cache.

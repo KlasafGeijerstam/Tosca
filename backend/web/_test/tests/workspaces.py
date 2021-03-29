@@ -26,6 +26,10 @@ def expected_in_response(expected):
     if len(candidates) < 1:
         raise AssertionError("Expected at least one workspace with correct name, creator and info.")
 
+    candidates = [x for x in response.json() if x["queues"] == expected["queues"]]
+    if len(candidates) < 1:
+        raise AssertionError("Expected at least one workspace with correct name, creator, info and queues.")
+
 
 def check_response(response, expected):
     """ Helper function to check if response is correct """
@@ -67,6 +71,7 @@ def admin_post():
         raise AssertionError(f"Posting as admin user, expected status 200 got {response.status_code}")
 
     data["creator"] = "admin"
+    data["queues"] = []
     check_response(response, data)
     expected_in_response(data)
 
@@ -81,6 +86,7 @@ def super_post():
         raise AssertionError(f"Posting as super user, expected status 200 got {response.status_code}")
 
     data["creator"] = "super"
+    data["queues"] = []
     check_response(response, data)
     expected_in_response(data)
 

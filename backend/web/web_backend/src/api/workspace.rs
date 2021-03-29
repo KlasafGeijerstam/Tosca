@@ -1,8 +1,16 @@
 use super::DbPool;
 use actix_web::{delete, get, post, put, web, web::Json, Error, HttpResponse, Responder};
-use db_connector::workspace;
+use db_connector::{queue::Queue, workspace, workspace::Workspace};
 use log::error;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
+use std::convert::From;
+
+#[derive(Debug, Serialize)]
+struct RestWorkspace {
+    #[serde(flatten)]
+    workspace: Workspace,
+    queues: Vec<Queue>,
+}
 
 pub fn configure(cfg: &mut web::ServiceConfig) {
     cfg.service(
@@ -22,12 +30,22 @@ async fn get_workspaces(
     let con = db_pool
         .get()
         .expect("Failed to get database handle from pool");
-    let workspaces = web::block(move || workspace::get_workspaces(&con))
-        .await
-        .map_err(|e| {
-            error!("Failed to load workspaces: {:?}", e);
-            HttpResponse::InternalServerError().finish()
-        })?;
+    let workspaces = web::block(move || {
+        workspace::get_workspaces(&con)?
+            .drain(..)
+            .map(|workspace| {
+                Ok(RestWorkspace {
+                    workspace,
+                    queues: Vec::new(),
+                })
+            })
+            .collect::<anyhow::Result<Vec<_>>>()
+    })
+    .await
+    .map_err(|e| {
+        error!("Failed to load workspaces: {:?}", e);
+        HttpResponse::InternalServerError().finish()
+    })?;
 
     Ok(HttpResponse::Ok().json(workspaces))
 }
