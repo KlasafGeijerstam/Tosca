@@ -1,0 +1,8 @@
+[workspace]
+members = [
+    "login/dev_login",
+    "login/oidc",
+    "user/toml_provider",
+    "web/web_backend",
+    "web/db_connector"
+]

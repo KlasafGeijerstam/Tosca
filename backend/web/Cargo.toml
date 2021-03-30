@@ -1,6 +1,0 @@
-[workspace]
-
-members = [ 
-    "db_connector",
-    "web_backend",
-]
