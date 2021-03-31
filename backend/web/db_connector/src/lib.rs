@@ -6,6 +6,8 @@ pub mod queue;
 
 pub mod workspace;
 
+pub mod signup;
+
 use diesel::pg::PgConnection;
 use diesel::r2d2::ConnectionManager;
 use anyhow::{anyhow, Result};
