@@ -35,7 +35,6 @@ pub struct Config {
 
 /// Represents a OpenIDProvider config file
 impl Config {
-
     /// Loads a Config from a TOML file.
     pub async fn from_config_file(path: &str) -> Result<Self> {
         let config: ConfigFile = toml::from_str(
