@@ -5,9 +5,9 @@ use rustls::{NoClientAuth, ServerConfig};
 use std::fs::File;
 use std::io::BufReader;
 
-use tosca_openid_provider::{Config, OpenIDCallbackInfo, OpenIDProvider};
 use serde::{Deserialize, Serialize};
 use structopt::StructOpt;
+use tosca_openid_provider::{Config, OpenIDCallbackInfo, OpenIDProvider};
 
 #[derive(StructOpt)]
 #[structopt(name = "Tosca OpenID Connect provider")]
@@ -97,9 +97,7 @@ fn load_ssl_keys(config: &Config) -> ServerConfig {
 async fn main() -> std::io::Result<()> {
     let args = Arguments::from_args();
 
-    let oidc_cfg = Config::from_config_file(&args.config_file)
-        .await
-        .unwrap();
+    let oidc_cfg = Config::from_config_file(&args.config_file).await.unwrap();
 
     let cfg = load_ssl_keys(&oidc_cfg);
 

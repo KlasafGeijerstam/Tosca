@@ -3,8 +3,8 @@ extern crate diesel;
 mod schema;
 
 pub mod queue;
-pub mod workspace;
 pub mod signup;
+pub mod workspace;
 
 use anyhow::{anyhow, Result};
 use diesel::pg::PgConnection;

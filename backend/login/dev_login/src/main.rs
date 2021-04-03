@@ -1,7 +1,7 @@
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder, Result, HttpRequest};
-use structopt::StructOpt;
 use actix_files::NamedFile;
-use serde::{Serialize, Deserialize};
+use actix_web::{get, post, web, App, HttpRequest, HttpResponse, HttpServer, Responder, Result};
+use serde::{Deserialize, Serialize};
+use structopt::StructOpt;
 
 #[derive(StructOpt)]
 #[structopt(name = "Tosca development login provider")]
@@ -43,11 +43,11 @@ async fn token(token: web::Json<Token>) -> impl Responder {
 }
 
 #[get("/do_login")]
-async fn do_login(
-    resp: web::Query<LoginData>,
-    cfg: web::Data<Arguments>,
-) -> impl Responder {
-    let url = format!("{}?token=token_{}&exp=99999", cfg.client_endpoint, resp.user_id);
+async fn do_login(resp: web::Query<LoginData>, cfg: web::Data<Arguments>) -> impl Responder {
+    let url = format!(
+        "{}?token=token_{}&exp=99999",
+        cfg.client_endpoint, resp.user_id
+    );
     println!("Redirecting to {}", url);
 
     HttpResponse::TemporaryRedirect()
@@ -66,7 +66,7 @@ async fn main() -> std::io::Result<()> {
     let args = Arguments::from_args();
     let port = args.port;
     let data = web::Data::new(args);
-    
+
     pretty_env_logger::init();
 
     HttpServer::new(move || {
@@ -81,7 +81,6 @@ async fn main() -> std::io::Result<()> {
     .bind(("0.0.0.0", port))?
     .run()
     .await
-
 }
 
 async fn read_index(_: HttpRequest) -> Result<NamedFile> {

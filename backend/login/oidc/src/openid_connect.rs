@@ -129,7 +129,7 @@ impl OpenIDProvider {
 
     /// Generate an OpenID login link
     /// Generates a link with embedded state and nonce, with]
-    /// a specified callback uri. 
+    /// a specified callback uri.
     ///
     /// The callback uri must be approved in the OIDC providers
     /// API.
