@@ -1,6 +1,6 @@
 use super::DbPool;
 use actix_web::{get, post, web, web::Json, Error, HttpResponse};
-use db_connector::{queue::Queue, workspace, workspace::Workspace};
+use db_connector::{queue::get_queues, queue::Queue, workspace, workspace::Workspace};
 use log::error;
 use serde::{Deserialize, Serialize};
 
@@ -34,8 +34,8 @@ async fn get_workspaces(
             .drain(..)
             .map(|workspace| {
                 Ok(RestWorkspace {
+                    queues: get_queues(&con, workspace.id)?,
                     workspace,
-                    queues: Vec::new(),
                 })
             })
             .collect::<anyhow::Result<Vec<_>>>()
