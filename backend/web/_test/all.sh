@@ -89,6 +89,10 @@ for test in _test/tests/*; do
 		printf "\n"
 	fi
 
+	docker exec -it tosca-test-db psql -U $PGUSER -d $PGDATABASE -c 'TRUNCATE workspaces CASCADE' 2>&1 >/dev/null
+	if [[ $? != 0 ]]; then
+		printf "WARNING! Could not clear database between tests\n"
+	fi	
 done
 printf "[Tests] DONE!\n"
 
