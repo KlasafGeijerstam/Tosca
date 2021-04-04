@@ -57,8 +57,8 @@ def normal_post():
         "info": "Its just a normal workspace, nothing special."
     }
     response = requests.post(API_BASE_URL + "workspaces", headers=normal_headers, verify=False, json=data)
-    if response.status_code != 401:
-        raise AssertionError(f"Posting as normal user, expected status 401 got {response.status_code}")
+    if response.status_code != 403:
+        raise AssertionError(f"Posting as normal user, expected status 403 got {response.status_code}")
 
 
 def admin_post():

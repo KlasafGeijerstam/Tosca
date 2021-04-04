@@ -1,9 +1,8 @@
 use super::DbPool;
-use actix_web::{delete, get, post, put, web, web::Json, Error, HttpResponse, Responder};
+use actix_web::{get, post, web, web::Json, Error, HttpResponse};
 use db_connector::{queue::Queue, workspace, workspace::Workspace};
 use log::error;
 use serde::{Deserialize, Serialize};
-use std::convert::From;
 
 #[derive(Debug, Serialize)]
 struct RestWorkspace {
@@ -20,7 +19,7 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
     );
 }
 
-use crate::user_provider::{AdminUser, NormalUser, SuperUser, UserData};
+use crate::user_provider::{AdminUser, NormalUser, UserData};
 
 #[get("")]
 async fn get_workspaces(
