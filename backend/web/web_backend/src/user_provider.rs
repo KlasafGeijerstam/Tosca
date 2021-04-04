@@ -1,6 +1,6 @@
 use crate::login_provider::LoginProvider;
 use actix_web::http::header::Header;
-use actix_web::{error::ErrorUnauthorized, web, Error, FromRequest, HttpRequest};
+use actix_web::{error::ErrorUnauthorized, error::ErrorForbidden, web, Error, FromRequest, HttpRequest};
 use actix_web_httpauth::headers::authorization::{Authorization, Bearer};
 use anyhow::bail;
 use futures::Future;
@@ -136,7 +136,7 @@ where
 
                     match user_provider.get_user(&user_id).await {
                         Ok(user) => Ok(user),
-                        Err(error) => Err(ErrorUnauthorized(format!("Unauthorized: {:?}", error))),
+                        Err(error) => Err(ErrorForbidden(format!("Unauthorized: {:?}", error))),
                     }
                 })
             }

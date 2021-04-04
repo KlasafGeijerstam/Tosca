@@ -11,12 +11,14 @@ struct Token<'a> {
 #[derive(Deserialize)]
 struct TokenResponse {
     sub: String,
+    #[allow(dead_code)]
     exp: u64,
 }
 
 pub struct LoginProvider {
     client: Client,
     token_host: String,
+    #[allow(dead_code)]
     logout_host: String,
 }
 

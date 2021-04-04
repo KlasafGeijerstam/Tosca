@@ -5,7 +5,7 @@ use rustls::{NoClientAuth, ServerConfig};
 use std::fs::File;
 use std::io::BufReader;
 
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use structopt::StructOpt;
 
 use db_connector::create_db_pool;
@@ -136,7 +136,11 @@ async fn main() -> std::io::Result<()> {
             .data(db_pool.clone())
             .app_data(user_provider.clone())
             .app_data(login_provider.clone())
-            .service(web::scope("/api").configure(api::workspace::configure))
+            .service(
+                web::scope("/api")
+                    .configure(api::queue::configure)
+                    .configure(api::workspace::configure),
+            )
             .service(super_user)
             .service(normal_user)
             .service(admin_user)
