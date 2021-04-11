@@ -19,12 +19,12 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
     );
 }
 
-use crate::user_provider::{AdminUser, NormalUser, UserData};
+use crate::user_provider::{AdminUser, NormalUser};
 
 #[get("")]
 async fn get_workspaces(
     db_pool: DbPool,
-    _user: UserData<NormalUser>,
+    _user: NormalUser,
 ) -> Result<HttpResponse, Error> {
     let con = db_pool
         .get()
@@ -58,7 +58,7 @@ struct AddWorkspace {
 #[post("")]
 async fn add_workspace(
     db_pool: DbPool,
-    user: UserData<AdminUser>,
+    user: AdminUser,
     wspace: Json<AddWorkspace>,
 ) -> Result<HttpResponse, Error> {
     let con = db_pool

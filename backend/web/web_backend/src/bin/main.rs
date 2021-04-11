@@ -11,7 +11,7 @@ use structopt::StructOpt;
 use db_connector::create_db_pool;
 use web_backend::api;
 use web_backend::login_provider::LoginProvider;
-use web_backend::user_provider::{AdminUser, NormalUser, SuperUser, UserData, UserProvider};
+use web_backend::user_provider::{AdminUser, NormalUser, SuperUser, UserProvider};
 
 use actix_cors::Cors;
 
@@ -81,17 +81,17 @@ async fn ping() -> impl Responder {
 }
 
 #[get("/test/super")]
-async fn super_user(user: UserData<SuperUser>) -> impl Responder {
+async fn super_user(user: SuperUser) -> impl Responder {
     HttpResponse::Ok().body(format!("Hello! {:?}", user))
 }
 
 #[get("/test/normal")]
-async fn normal_user(user: UserData<NormalUser>) -> impl Responder {
+async fn normal_user(user: NormalUser) -> impl Responder {
     HttpResponse::Ok().body(format!("Hello! {:?}", user))
 }
 
 #[get("/test/admin")]
-async fn admin_user(user: UserData<AdminUser>) -> impl Responder {
+async fn admin_user(user: AdminUser) -> impl Responder {
     HttpResponse::Ok().body(format!("Hello! {:?}", user))
 }
 
