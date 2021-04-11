@@ -20,3 +20,4 @@ WORKDIR app
 COPY --from=builder /app/target/release/dev_login /usr/local/bin
 
 ENTRYPOINT ["dev_login"]
+CMD ["8000", "https://localhost"]
