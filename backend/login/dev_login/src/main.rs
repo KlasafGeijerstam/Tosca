@@ -1,5 +1,4 @@
-use actix_files::NamedFile;
-use actix_web::{get, post, web, App, HttpRequest, HttpResponse, HttpServer, Responder, Result};
+use actix_web::{get, post, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
 use serde::{Deserialize, Serialize};
 use structopt::StructOpt;
 
@@ -64,6 +63,10 @@ async fn logout(user_token: web::Json<Token>) -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let args = Arguments::from_args();
+
+    println!("Listening on port: {}", args.port);
+    println!("Redirecting to: {}", args.client_endpoint);
+
     let port = args.port;
     let data = web::Data::new(args);
 
@@ -83,6 +86,48 @@ async fn main() -> std::io::Result<()> {
     .await
 }
 
-async fn read_index(_: HttpRequest) -> Result<NamedFile> {
-    Ok(NamedFile::open("index.html")?)
+async fn read_index(_: HttpRequest) -> impl Responder {
+    HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body(INDEX)
 }
+
+const INDEX: &'static str = r#"
+<html>
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body> 
+    <div id="login">
+      <form action="do_login">
+        <div>
+          <label>Username:</label>
+          <input type="text" name="user_id">
+        </div>
+        <button>Login!</button>
+      </form>
+    </div>
+    <style>
+      #login {
+        display: flex;
+        justify-content: center;
+        height: 100%;
+      }
+      
+      input {
+        margin: 0.5em;
+      }
+
+      form {
+        align-self: center;
+        border: 1px solid black;
+        padding: 5em;
+        border-radius: 1em;
+        box-shadow: 5px 5px lightgray;
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+  <body>
+</html>
+"#;
