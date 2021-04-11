@@ -39,11 +39,11 @@ struct UserWorkspace {
 
 #[derive(StructOpt)]
 struct Arguments {
-    /// The port to listen on.
-    port: u16,
-
     /// The TOML file containing the user database to serve.
     user_database: String,
+
+    /// The port to listen on.
+    port: u16,
 }
 
 #[actix_web::main]
