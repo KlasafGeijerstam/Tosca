@@ -3,13 +3,13 @@ services:
     dev-login-provider:
         build: login/dev_login/
         ports:
-            - "8000:8000"
-        command: ["8000", "https://localhost"]
+            - "9000:9000"
+        command: ["9000", "https://localhost"]
     dev-user-provider:
         build: user/toml_provider/
         ports:
-            - "9000:9000"
-        command: ["9000"]
+            - "8000:8000"
+        command: ["8000"]
     
     database:
         image: postgres

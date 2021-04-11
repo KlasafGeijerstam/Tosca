@@ -10,8 +10,8 @@ login_provider = "http://localhost:9000"
 user_provider = "http://localhost:8000"
 
 [database]
-host = ""
+host = "localhost"
 port = 5432
-user = "tosca_user"
-database = "tosca_database"
-password = ""
+user = "postgres"
+database = "postgres"
+password = "1234"

@@ -55,7 +55,7 @@ if (( $? != 0 )); then
 fi
 
 printf "[User] Starting\n"
-cargo run 8000 res/user_db.toml&
+cargo run res/user_db.toml 8000&
 user_pid=$!
 popd
 
