@@ -9,12 +9,19 @@ use futures::Future;
 use log::debug;
 use reqwest::Client;
 use serde::Deserialize;
-use std::marker::PhantomData;
 use std::pin::Pin;
 
+// Available user levels
+pub const SUPER_USER: usize = 0;
+pub const ADMIN_USER: usize = 1;
+pub const NORMAL_USER: usize = 2;
+
+pub type NormalUser = UserData<NORMAL_USER>;
+pub type AdminUser = UserData<ADMIN_USER>;
+pub type SuperUser = UserData<SUPER_USER>;
+
 #[derive(Debug)]
-pub struct UserData<L: UserLevel> {
-    phantom_level: PhantomData<L>,
+pub struct UserData<const LEVEL: usize> {
     pub user_id: String,
     pub first_name: String,
     pub last_name: String,
@@ -54,7 +61,10 @@ impl UserProvider {
 
     /// Gets UserData for a user_id. Returns `Err` if the user does not exist,
     /// or if the user associated with the user_id lacks permissions (greater permission value) (`L`).
-    pub async fn get_user<L: UserLevel>(&self, user_id: &str) -> anyhow::Result<UserData<L>> {
+    pub async fn get_user<const LEVEL: usize>(
+        &self,
+        user_id: &str,
+    ) -> anyhow::Result<UserData<LEVEL>> {
         let RemoteUser {
             first_name,
             last_name,
@@ -62,18 +72,17 @@ impl UserProvider {
             workspaces,
         } = self.get_user_from_provider(user_id).await?;
 
-        let required_level = L::new();
+        let required_level = LEVEL;
 
-        if user_level > required_level.level() {
+        if user_level > required_level {
             bail!(
                 "User lacks permissions. Required: {}, actual: {}",
-                required_level.level(),
+                required_level,
                 user_level
             )
         }
 
         Ok(UserData {
-            phantom_level: PhantomData,
             user_id: user_id.into(),
             first_name,
             last_name,
@@ -100,10 +109,7 @@ impl UserProvider {
 /// Parses a UserData by Bearer token and UserProvider lookup.
 /// Requires that the App has a `UserProvider` registered as data.
 /// Requires that the request has a `Authorization` header of type `Bearer` set.
-impl<L> FromRequest for UserData<L>
-where
-    L: UserLevel,
-{
+impl<const LEVEL: usize> FromRequest for UserData<LEVEL> {
     type Error = Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self, Self::Error>>>>;
     type Config = ();
@@ -151,73 +157,3 @@ where
     }
 }
 
-#[test]
-fn superuser_less_admin() {
-    if SuperUser::new().level() > AdminUser::new().level() {
-        panic!("SuperUser should be less than AdminUser")
-    }
-}
-
-#[test]
-fn admin_less_normal() {
-    if AdminUser::new().level() > NormalUser::new().level() {
-        panic!("AdminUser should be less than NormalUser")
-    }
-}
-
-#[test]
-fn superuser_less_normal() {
-    if SuperUser::new().level() > NormalUser::new().level() {
-        panic!("SuperUser should be less than NormalUser")
-    }
-}
-
-const SUPER_USER: usize = 0;
-const ADMIN_USER: usize = 1;
-const NORMAL_USER: usize = 2;
-
-pub trait UserLevel: std::fmt::Debug {
-    fn level(&self) -> usize;
-    fn new() -> Self
-    where
-        Self: Sized;
-}
-
-#[derive(Debug)]
-pub struct SuperUser;
-
-impl UserLevel for SuperUser {
-    fn level(&self) -> usize {
-        SUPER_USER
-    }
-
-    fn new() -> Self {
-        SuperUser {}
-    }
-}
-
-#[derive(Debug)]
-pub struct AdminUser;
-
-impl UserLevel for AdminUser {
-    fn level(&self) -> usize {
-        ADMIN_USER
-    }
-
-    fn new() -> Self {
-        AdminUser {}
-    }
-}
-
-#[derive(Debug)]
-pub struct NormalUser;
-
-impl UserLevel for NormalUser {
-    fn level(&self) -> usize {
-        NORMAL_USER
-    }
-
-    fn new() -> Self {
-        NormalUser {}
-    }
-}

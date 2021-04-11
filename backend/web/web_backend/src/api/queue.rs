@@ -14,7 +14,7 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
     cfg.service(web::scope("/queue").service(get_queue).service(add_queue));
 }
 
-use crate::user_provider::{AdminUser, NormalUser, UserData};
+use crate::user_provider::{AdminUser, NormalUser};
 
 #[derive(Deserialize)]
 struct QueueParam {
@@ -24,7 +24,7 @@ struct QueueParam {
 #[get("/{q_id}")]
 async fn get_queue(
     db_pool: DbPool,
-    _user: UserData<NormalUser>,
+    _user: NormalUser,
     param: web::Path<QueueParam>,
 ) -> Result<HttpResponse, Error> {
     let con = db_pool
@@ -50,7 +50,7 @@ struct AddQueue {
 #[post("")]
 async fn add_queue(
     db_pool: DbPool,
-    _: UserData<AdminUser>,
+    _: AdminUser,
     add_queue: Json<AddQueue>,
 ) -> Result<HttpResponse, Error> {
     let con = db_pool
