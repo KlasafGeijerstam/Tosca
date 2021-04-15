@@ -85,7 +85,6 @@ impl UserProvider {
     /// TODO: Make UserProvider actually use a configured user provider to fetch data
     /// TODO: Cache lookups to user provider
     async fn get_user_from_provider(&self, user_id: &str) -> anyhow::Result<RemoteUser> {
-
         // Lookup cache
         //
 
