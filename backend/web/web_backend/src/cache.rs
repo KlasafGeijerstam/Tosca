@@ -31,6 +31,7 @@ impl Timeout {
         self.id_to_time.remove(&key);
     }
 
+    // If this is invalid, n
     fn is_valid(&mut self, key: String) -> bool {
         if let Some(k) = self.id_to_time.get(&key) {
             if k.elapsed() >= self.timeout {
@@ -51,9 +52,7 @@ impl MaxSize {
     fn new(max_size: usize) -> Self {
         MaxSize {
             max_size,
-            // First in last out
-            // Maybe should be stack alloacted?
-            filo: Vec::new(),
+            filo: Vec::new(), // first-in-last-out
             index: 0,
         }
     }
@@ -143,6 +142,8 @@ impl<V: Clone> Cache<V> {
         if let Some(timeout) = &self.timeout {
             // If the entry is too old
             if !timeout.write().await.is_valid(String::from(key)) {
+                // TODO: if this is invalid, MaxSize will contain one unnecessary
+                // entry
                 return None;
             }
         }
@@ -178,12 +179,9 @@ impl<V: Clone> Cache<V> {
     }
 }
 
-// Write tests
-// Benchmark
-
-
+// TODO: Write tests
 #[tokio::test]
 async fn max_size_test() {
-    
-
 }
+
+// TODO: Setup benchmark
