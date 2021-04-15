@@ -179,9 +179,19 @@ impl<V: Clone> Cache<V> {
     }
 }
 
-// TODO: Write tests
+// TODO: Write testsmut 
+/*
 #[tokio::test]
 async fn max_size_test() {
+
+    let cache: Cache<usize> = CacheBuilder::new().with_max_size(5).build();
+
+    for i in 0..50 {
+        cache.store("abc", i).await;
+    }
+
+    assert_eq!(cache.max_size.unwrap().read().await.filo.len(), 5);
 }
+*/
 
 // TODO: Setup benchmark
