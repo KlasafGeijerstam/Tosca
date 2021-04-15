@@ -1,16 +1,45 @@
 use std::collections::HashMap;
-use tokio::sync::RwLock;
-use std::sync::Arc;
-use std::time::Duration;
 use std::mem::replace;
-
-/// Put max size on cache.
-/// Put timeout on cache entries.
+use std::sync::Arc;
+use std::time::{Duration, Instant};
+use tokio::sync::RwLock;
 
 struct MaxSize {
     max_size: usize,
     filo: Vec<String>,
-    index: usize
+    index: usize,
+}
+
+struct Timeout {
+    timeout: Duration,
+    id_to_time: HashMap<String, Instant>,
+}
+
+impl Timeout {
+    fn new(timeout: Duration) -> Self {
+        Timeout {
+            timeout,
+            id_to_time: HashMap::new(),
+        }
+    }
+
+    fn put(&mut self, key: String) {
+        self.id_to_time.insert(key.clone(), Instant::now());
+    }
+
+    fn remove(&mut self, key: String) {
+        self.id_to_time.remove(&key);
+    }
+
+    fn is_valid(&mut self, key: String) -> bool {
+        if let Some(k) = self.id_to_time.get(&key) {
+            if k.elapsed() >= self.timeout {
+                self.remove(key);
+                return false;
+            }
+        }
+        false
+    }
 }
 
 // Emluate queue where we can save the Keys from cache
@@ -25,7 +54,7 @@ impl MaxSize {
             // First in last out
             // Maybe should be stack alloacted?
             filo: Vec::new(),
-            index: 0
+            index: 0,
         }
     }
 
@@ -52,7 +81,6 @@ impl MaxSize {
     fn has_reached_max_size(&self) -> bool {
         self.filo.len() == self.max_size
     }
-
 }
 
 pub struct CacheBuilder {
@@ -61,7 +89,6 @@ pub struct CacheBuilder {
 }
 
 impl CacheBuilder {
-    
     pub fn new() -> Self {
         CacheBuilder {
             timeout: None,
@@ -72,18 +99,23 @@ impl CacheBuilder {
     pub fn with_max_size(self, max_size: usize) -> Self {
         CacheBuilder {
             max_size: Some(max_size),
-            timeout: self.timeout
+            timeout: self.timeout,
         }
     }
 
-    pub fn with_timeout(self, __timeout: Duration) -> Self {
-        unimplemented!();
+    pub fn with_timeout(self, timeout: Duration) -> Self {
+        CacheBuilder {
+            max_size: self.max_size,
+            timeout: Some(timeout),
+        }
     }
 
     pub fn build<V>(self) -> Cache<V> {
         Cache {
             cache: RwLock::new(HashMap::new()),
-            __timeout: self.timeout,
+            timeout: self
+                .timeout
+                .map(|duration| RwLock::new(Timeout::new(duration))),
             max_size: self.max_size.map(|size| RwLock::new(MaxSize::new(size))),
         }
     }
@@ -98,23 +130,37 @@ impl Default for CacheBuilder {
 pub struct Cache<V> {
     cache: RwLock<HashMap<String, Arc<V>>>,
     max_size: Option<RwLock<MaxSize>>,
-    __timeout: Option<Duration>,
+    timeout: Option<RwLock<Timeout>>,
 }
 
 impl<V: Clone> Cache<V> {
-
     pub fn builder() -> CacheBuilder {
         CacheBuilder::default()
     }
 
     pub async fn lookup(&self, key: &str) -> Option<Arc<V>> {
+        // If the timeout is set
+        if let Some(timeout) = &self.timeout {
+            // If the entry is too old
+            if !timeout.write().await.is_valid(String::from(key)) {
+                return None;
+            }
+        }
         self.cache.read().await.get(key).cloned()
     }
 
     // Save key and value in cache
     pub async fn store(&self, key: &str, value: V) -> Arc<V> {
         let value = Arc::new(value);
-        self.cache.write().await.insert(String::from(key), value.clone());
+        self.cache
+            .write()
+            .await
+            .insert(String::from(key), value.clone());
+
+        // If the timeout is set
+        if let Some(timeout) = &self.timeout {
+            timeout.write().await.put(String::from(key));
+        }
 
         // If the max_size is set
         if let Some(max_size) = &self.max_size {
@@ -122,6 +168,10 @@ impl<V: Clone> Cache<V> {
             if let Some(to_remove) = max_size.write().await.put(String::from(key)) {
                 // remove the least recent
                 self.cache.write().await.remove(&to_remove);
+                // If the timeout is set
+                if let Some(timeout) = &self.timeout {
+                    timeout.write().await.remove(String::from(key));
+                }
             }
         }
         value.clone()
