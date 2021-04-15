@@ -180,3 +180,10 @@ impl<V: Clone> Cache<V> {
 
 // Write tests
 // Benchmark
+
+
+#[tokio::test]
+async fn max_size_test() {
+    
+
+}
