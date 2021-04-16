@@ -16,18 +16,17 @@ def fail(msg):
     raise AssertionError(msg)
 
 
-def check_response(response, expected):
-    """ Helper function to check if response is correct """
-    json = response.json()
-    if json["id"] != expected["id"]:
-        fail(f"Id differs. Got: {json['id']}, Expected: {expected['id']}.")
-    if json["workspace_id"] != expected["workspace_id"]:
-        fail(f"Workspace_id differs. Got: {json['workspace_id']}, "
+def compare_queues(actual, expected):
+    """ Helper function to compare queues """
+    if actual["id"] != expected["id"]:
+        fail(f"Id differs. Got: {actual['id']}, Expected: {expected['id']}.")
+    if actual["workspace_id"] != expected["workspace_id"]:
+        fail(f"Workspace_id differs. Got: {actual['workspace_id']}, "
              f"Expected: {expected['workspace_id']}.")
-    if json["info"] != expected["info"]:
-        fail(f"Info differs. Got: {json['info']}, Expected: {expected['info']}.")
-    if json['name'] != expected["name"]:
-        fail(f"Name differs. Got: {json['name']}, Expected: {expected['name']}.")
+    if actual["info"] != expected["info"]:
+        fail(f"Info differs. Got: {actual['info']}, Expected: {expected['info']}.")
+    if actual['name'] != expected["name"]:
+        fail(f"Name differs. Got: {actual['name']}, Expected: {expected['name']}.")
 
 
 def create_workspace(name, info):
@@ -86,13 +85,38 @@ def create_queue_admin():
         fail(f"Expected status 200 got {response.status_code}")
 
     data["id"] = 1
-    check_response(response, data)
+    compare_queues(response.json(), data)
+
+
+def get_queue():
+    """ Creates a workspace with a queue and then get it"""
+    data = {
+        "workspace_id": create_workspace("Workspace Name", "Workspace Info"),
+        "name": "Admin Queue",
+        "info": "Admins should have permission to get queues."
+    }
+    response = requests.post(API_BASE_URL + "queue", headers=admin_headers, verify=False, json=data)
+
+    if response.status_code != 200:
+        fail(f"Could not add queue to workspace, got response {response.status_code}")
+
+    data["id"] = response.json()["id"]
+
+    response = requests.get(f"{API_BASE_URL}/queue/{data['id']}",
+                            headers=admin_headers,
+                            verify=False)
+    if response.status_code != 200:
+        fail(f"Expected status 200 got {response.status_code}")
+
+    json = response.json()
+    compare_queues(json[0], data)
 
 
 try:
     get_queue_that_does_not_exist()
     create_queue_normal()
     create_queue_admin()
+    get_queue()
     sys.exit(0)
 
 except AssertionError:
