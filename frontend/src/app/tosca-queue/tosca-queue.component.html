@@ -1,48 +1,75 @@
-<div class="container">
-  <div class="flex">
-    <h1 style="font-weight: bold">
-      QueueName
-    </h1>
-    <mat-slide-toggle [labelPosition]="'before'" [(ngModel)]="adminView">Admin view</mat-slide-toggle>
-  </div>
-  <p>
-    Here is some info about the list. There is probably going to be more text here than
-    just one sentence, so we might as well write some more text. If you have ever seen
-    a shorter description than this, then maybe we should try using that one as well.
-    Otherwise, this should do it.
-  </p>
+  <mat-card class="container">
+    <div class="flex">
+      <h1 style="font-weight: bold">
+        <mat-icon id="header-icon">person</mat-icon>
+        QueueName
+        <button mat-icon-button><mat-icon *ngIf="adminView">edit</mat-icon></button>
+      </h1>
+      <mat-slide-toggle [labelPosition]="'before'" [(ngModel)]="adminView">Admin view</mat-slide-toggle>
+    </div>
+    <p>
+      Here is some info about the list. There is probably going to be more text here than
+      just one sentence, so we might as well write some more text. If you have ever seen
+      a shorter description than this, then maybe we should try using that one as well.
+      Otherwise, this should do it.
+    </p>
 
-  <mat-card *ngIf="!adminView">
-    <form>
-      <mat-card-content id="form-container">
-        <mat-form-field>
-          <input type="text" matInput placeholder="Message/Location">
-        </mat-form-field>
-        <mat-form-field>
-          <input type="url" pattern="https://.*" matInput placeholder="Link (Optional)">
-        </mat-form-field>
-      </mat-card-content>
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="tab-label">
+            <div class="date">
+              Today
+            </div>
+            <div class="time">
+              15:15 - 17:00
+            </div>
+          </div>
+        </ng-template>
 
-      <mat-card-actions align="end">
-        <button type="submit" mat-raised-button color="primary" (click)="signup('hej', 'hejurl')">Sign up</button>
-      </mat-card-actions>
-    </form>
+        <div class="queue-signup" *ngIf="!adminView">
+          <form>
+            <mat-card-content class="form-container">
+              <mat-form-field>
+                <input type="text" matInput placeholder="Message/Location">
+              </mat-form-field>
+              <mat-form-field>
+                <input type="url" pattern="https://.*" matInput placeholder="Link (Optional)">
+              </mat-form-field>
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+              <button type="submit" mat-raised-button color="primary" (click)="signup('hej', 'hejurl')">Sign up</button>
+            </mat-card-actions>
+          </form>
+        </div>
+        <br/>
+        <app-tosca-queue-item *ngFor="let student of studentQueue; index as i; last as last"
+                              [id]="student.id"
+                              [name]="student.name"
+                              [username]="student.username"
+                              [message]="student.message"
+                              [link]="student.link"
+                              [last]="last"
+                              [adminView]="adminView"
+                              [index]="i">
+        </app-tosca-queue-item>
+      </mat-tab>
+
+      <mat-tab disabled>
+        <ng-template mat-tab-label> Tomorrow <br/> 12:00 - 13:00 </ng-template>
+      </mat-tab>
+      <mat-tab disabled>
+        <ng-template mat-tab-label> Thursday <br/> 12:00 - 13:00 </ng-template>
+      </mat-tab>
+      <mat-tab disabled>
+        <ng-template mat-tab-label> 2020-04-26 <br/> 12:00 - 13:00 </ng-template>
+      </mat-tab>
+      <mat-tab disabled>
+        <ng-template mat-tab-label> 2020-04-27 <br/> 12:00 - 13:00 </ng-template>
+      </mat-tab>
+      <mat-tab disabled>
+        <ng-template mat-tab-label> 2020-05-12 <br/> 12:00 - 13:00 </ng-template>
+      </mat-tab>
+    </mat-tab-group>
   </mat-card>
-
-  <br/>
-
-  <mat-card class="no-header">
-    <mat-card-content>
-      <app-tosca-queue-item *ngFor="let student of studentQueue; index as i; last as last"
-                            [id]="student.id"
-                            [name]="student.name"
-                            [username]="student.username"
-                            [message]="student.message"
-                            [link]="student.link"
-                            [last]="last"
-                            [adminView]="adminView"
-                            [index]="i">
-      </app-tosca-queue-item>
-    </mat-card-content>
-  </mat-card>
-</div>

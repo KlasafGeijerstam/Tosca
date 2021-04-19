@@ -20,6 +20,7 @@ import { ToscaSignupComponent } from './tosca-signup/tosca-signup.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { MatListModule } from '@angular/material/list';
     MatDividerModule,
     MatDialogModule,
     MatListModule,
+    MatTabsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

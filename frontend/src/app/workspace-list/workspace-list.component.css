@@ -28,12 +28,6 @@ mat-card-title {
   margin: 0 !important;
 }
 
-mat-icon {
-  color: var(--tosca-primary-text);
-  width: 1.5em;
-  height: 1.5em;
-}
-
 mat-card img {
   object-fit: cover;
   height: 10rem;
