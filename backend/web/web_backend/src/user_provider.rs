@@ -1,3 +1,4 @@
+use crate::cache::Cache;
 use crate::login_provider::LoginProvider;
 use actix_web::http::header::Header;
 use actix_web::{
@@ -5,11 +6,13 @@ use actix_web::{
 };
 use actix_web_httpauth::headers::authorization::{Authorization, Bearer};
 use anyhow::bail;
+use anyhow::Result;
 use futures::Future;
 use log::debug;
 use reqwest::Client;
 use serde::Deserialize;
 use std::pin::Pin;
+use std::sync::Arc;
 
 // Available user levels
 pub const SUPER_USER: usize = 0;
@@ -22,6 +25,33 @@ pub type SuperUser = UserData<SUPER_USER>;
 
 #[derive(Debug)]
 pub struct UserData<const LEVEL: usize> {
+    user: Arc<User>,
+}
+
+impl<const LEVEL: usize> UserData<LEVEL> {
+    pub fn user_id(&self) -> &str {
+        &self.user.user_id
+    }
+
+    pub fn first_name(&self) -> &str {
+        &self.user.first_name
+    }
+
+    pub fn last_name(&self) -> &str {
+        &self.user.last_name
+    }
+
+    pub fn level(&self) -> usize {
+        self.user.user_level
+    }
+
+    pub fn workspaces(&self) -> &Vec<String> {
+        &self.user.workspaces
+    }
+}
+
+#[derive(Debug)]
+pub struct User {
     pub user_id: String,
     pub first_name: String,
     pub last_name: String,
@@ -37,11 +67,10 @@ struct RemoteUser {
     pub user_level: usize,
     pub workspaces: Vec<String>,
 }
-
-/// TODO: Cache
 pub struct UserProvider {
     client: Client,
     api_host: String,
+    cache: Cache<User>,
 }
 
 impl UserProvider {
@@ -56,6 +85,7 @@ impl UserProvider {
         UserProvider {
             client: Client::new(),
             api_host: api_host.into(),
+            cache: Cache::<User>::builder().with_max_size(1_000).build(),
         }
     }
 
@@ -65,39 +95,28 @@ impl UserProvider {
         &self,
         user_id: &str,
     ) -> anyhow::Result<UserData<LEVEL>> {
-        let RemoteUser {
-            first_name,
-            last_name,
-            user_level,
-            workspaces,
-        } = self.get_user_from_provider(user_id).await?;
+        let user = self.get_user_from_provider(user_id).await?;
 
         let required_level = LEVEL;
 
-        if user_level > required_level {
+        if user.user_level > required_level {
             bail!(
                 "User lacks permissions. Required: {}, actual: {}",
                 required_level,
-                user_level
+                user.user_level
             )
         }
 
-        Ok(UserData {
-            user_id: user_id.into(),
-            first_name,
-            last_name,
-            user_level,
-            workspaces,
-        })
+        Ok(UserData { user })
     }
 
     /// TODO: Make UserProvider actually use a configured user provider to fetch data
-    /// TODO: Cache lookups to user provider
-    async fn get_user_from_provider(&self, user_id: &str) -> anyhow::Result<RemoteUser> {
-        // Lookup cache
-        //
+    async fn get_user_from_provider(&self, user_id: &str) -> anyhow::Result<Arc<User>> {
+        if let Some(response) = self.cache.lookup(user_id.into()).await {
+            return Ok(response.clone());
+        }
 
-        let user = self
+        let user: RemoteUser = self
             .client
             .get(&format!("{}/users/{}", self.api_host, user_id))
             .send()
@@ -105,7 +124,15 @@ impl UserProvider {
             .json()
             .await?;
 
-        Ok(user)
+        let user = User {
+            user_id: user_id.into(),
+            first_name: user.first_name,
+            last_name: user.last_name,
+            user_level: user.user_level,
+            workspaces: user.workspaces,
+        };
+
+        Ok(self.cache.store(user_id, user).await)
     }
 }
 
@@ -159,4 +186,3 @@ impl<const LEVEL: usize> FromRequest for UserData<LEVEL> {
         }
     }
 }
-

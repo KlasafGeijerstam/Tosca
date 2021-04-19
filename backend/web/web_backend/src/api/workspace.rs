@@ -22,10 +22,7 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
 use crate::user_provider::{AdminUser, NormalUser};
 
 #[get("")]
-async fn get_workspaces(
-    db_pool: DbPool,
-    _user: NormalUser,
-) -> Result<HttpResponse, Error> {
+async fn get_workspaces(db_pool: DbPool, _user: NormalUser) -> Result<HttpResponse, Error> {
     let con = db_pool
         .get()
         .expect("Failed to get database handle from pool");
@@ -67,7 +64,7 @@ async fn add_workspace(
 
     let result = web::block(move || {
         let workspace = workspace::NewWorkspace {
-            creator: &user.user_id,
+            creator: &user.user_id(),
             info: &wspace.info,
             name: &wspace.name,
         };

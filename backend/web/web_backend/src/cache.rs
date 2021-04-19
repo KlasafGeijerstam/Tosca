@@ -31,10 +31,9 @@ impl Timeout {
         self.id_to_time.remove(&key);
     }
 
-    fn is_valid(&mut self, key: String) -> bool {
+    fn is_valid(&self, key: String) -> bool {
         if let Some(k) = self.id_to_time.get(&key) {
             if k.elapsed() >= self.timeout {
-                self.remove(key);
                 return false;
             }
         }
@@ -132,7 +131,7 @@ pub struct Cache<V> {
     timeout: Option<RwLock<Timeout>>,
 }
 
-impl<V: Clone> Cache<V> {
+impl<V> Cache<V> {
     pub fn builder() -> CacheBuilder {
         CacheBuilder::default()
     }
@@ -145,7 +144,9 @@ impl<V: Clone> Cache<V> {
         // If the timeout is set
         if let Some(timeout) = &self.timeout {
             // If the entry is too old
-            if !timeout.write().await.is_valid(String::from(key)) {
+            if !timeout.read().await.is_valid(String::from(key)) {
+                // remove the entry
+                timeout.write().await.remove(String::from(key));
                 // Possible improvement:
                 // - if this is invalid, MaxSize will contain one unnecessary
                 //   entry.
