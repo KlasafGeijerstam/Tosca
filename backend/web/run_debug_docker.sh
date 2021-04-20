@@ -29,7 +29,7 @@ echo "[Database] Started!"
 
 # Run migrations
 printf "[Migrations] Starting..\n"
-pushd db_connector
+pushd web_backend/db_connector
 mv src/schema.rs src/old_schema.rs # Save old version of schema.rs
 
 diesel --config-file diesel.toml migration --migration-dir migrations/ run

@@ -1,0 +1,149 @@
+openapi: 3.0.1
+info:
+  title: Tosca
+  description: Tosca REST
+  license:
+    name: MIT
+    url: https://github.com/KlasafGeijerstam/Tosca/blob/master/LICENSE
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: https://github.com/KlasafGeijerstam/Tosca
+servers:
+- url: https://localhost/api
+- url: http://example.com/api
+tags:
+- name: workspaces
+  description: All workspace related endpoints
+- name: queues
+  description: Queue related endpoints
+paths:
+  /workspaces:
+    get:
+      tags:
+        - workspaces
+      operationId: getWorkspaces
+      security:
+        - bearerAuth: []
+      description: Gets all available workspaces for the current user
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Workspace'
+    post:
+      tags:
+        - workspaces
+      operationId: postWorkspace
+      security:
+        - bearerAuth: []
+      description: Creates a new workspace, requires the user to be at least Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                info:
+                  type: string
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+  /{workspace_id}/queues:
+    get:
+      tags:
+        - queues
+        - workspaces
+      operationId: getQueues
+      security:
+        - bearerAuth: []
+      description: Gets all queues for a workspace
+      parameters:
+        - name: workspace_id
+          in: path
+          description: Workspace ID
+          required: true
+          schema:
+            $ref: '#/components/schemas/ID'
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Queue'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    ID:
+      type: integer
+      format: in32
+    Workspace:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        name:
+          type: string
+        info:
+          type: string
+        creator:
+          $ref: '#/components/schemas/User'
+        moderators:
+          $ref: '#/components/schemas/UserArray'
+        whitelist:
+          $ref: '#/components/schemas/UserArray'
+        queues:
+          $ref: '#/components/schemas/Queue'
+    User:
+      type: object
+      properties:
+        user_id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    UserArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+    Queue:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        name:
+          type: string
+        info:
+          type: string
+    QueueWithSlots:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Queue'
+        - type: object
+          properties:
+            queue_slots:
+              type: array
+              items:
+                $ref: '#/components/schemas/QueueSlot'
+    QueueSlot:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+      

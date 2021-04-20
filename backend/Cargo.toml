@@ -4,5 +4,5 @@ members = [
     "login/oidc",
     "user/toml_provider",
     "web/web_backend",
-    "web/db_connector"
+    "web/web_backend/db_connector",
 ]

@@ -17,3 +17,11 @@ services:
             - "5432:5432"
         environment:
             POSTGRES_PASSWORD: "1234"
+    web-backend:
+        build: web/web_backend/
+        depends_on:
+            - dev-login-provider
+            - dev-user-provider
+            - database
+        ports:
+            - "25674:25674" 

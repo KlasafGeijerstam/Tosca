@@ -21,6 +21,13 @@ it can function properly. These services are a *Login provider*, a *User provide
 and a *PostgreSQL* database. The web-backend takes a configuration file in TOML-format
 as an argument.
 
+### Generating a test-certificate
+An easy way to generate a certificate for testing is by using `mkcert`.
+* `mkcert --install` : Installs a development-root certificate
+* ./generate_certificate : Creates a certificate and key-file.
+* Configure the configuration file with the generated files (`config.toml`)
+
+
 ### Login provider
 For testing, the easiest setup is to use the `dev_login` login provider. The login
 provider takes two arguments, the port to listen on and the URL to redirect logged
@@ -38,7 +45,7 @@ host and port must be configured in the web-backends configuration file.
 ### PostgreSQL
 
 Tosca uses a PostgreSQL database to store and retreive data. The database must first be initialized
-by using `Diesel`. See [db\_connector](../db_connector/).
+by using `Diesel`. See [db\_connector](db_connector/).
 
 The database connection for the web-backend can be configured in two ways.
 
@@ -47,13 +54,8 @@ The database connection for the web-backend can be configured in two ways.
    takes a connection-url of the following format: `postgres://{user}:{password}@{host}:{port}/{database}`
 
 
-### Certification 
-
-The script `generate_certificate` needs to be run before the backend is started the first
-time to generate the https certificate.
-
-
 ### Sample startup
+0. Generate certificate (see above)
 1. Start the database.
     * Enter the database connection information into the configuration file. OR
     * Create a connection url of the aforementioned format.

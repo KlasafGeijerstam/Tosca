@@ -5,7 +5,7 @@ export DATABASE_URL=postgres://$PGUSER:$PGPASSWORD@$PGHOST:$PGPORT/$PGDATABASE
 
 # Run migrations
 printf "[Migrations] Starting..\n"
-pushd db_connector
+pushd web_backend/db_connector
 mv src/schema.rs src/old_schema.rs # Save old version of schema.rs
 
 diesel --config-file diesel.toml migration --migration-dir migrations/ run
@@ -89,7 +89,7 @@ for test in _test/tests/*; do
 		printf "\n"
 	fi
 
-	docker exec -it tosca-test-db psql -U $PGUSER -d $PGDATABASE -c 'TRUNCATE workspaces CASCADE' 2>&1 >/dev/null
+	sudo docker exec -it tosca-test-db psql -U $PGUSER -d $PGDATABASE -c 'TRUNCATE workspaces CASCADE' 2>&1 >/dev/null
 	if [[ $? != 0 ]]; then
 		printf "WARNING! Could not clear database between tests\n"
 	fi	

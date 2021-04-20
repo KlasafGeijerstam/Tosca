@@ -3,14 +3,14 @@ public_host = ""
 port = 25674
 
 # SSL Configuration for RusTLS
-certificate_file = "res/cert.pem"
-key_file = "res/key.pem"
+certificate_file = "/cert.pem"
+key_file = "/key.pem"
 
 login_provider = "http://localhost:9000"
 user_provider = "http://localhost:8000"
 
 [database]
-host = "localhost"
+host = "database"
 port = 5432
 user = "postgres"
 database = "postgres"
