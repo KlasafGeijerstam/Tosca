@@ -3,7 +3,7 @@
     <h3>
       {{ index + 1 }} {{ name }} - {{ username }}
       <span *ngIf="adminView">
-        <button mat-icon-button><mat-icon svgIcon="tabler-message-circle" color="primary"></mat-icon></button>
+        <button mat-icon-button><mat-icon color="primary">chat_bubble_outline</mat-icon></button>
       </span>
     </h3>
     <p *ngIf="adminView">{{ message }}</p>
@@ -20,4 +20,4 @@
   </div>
 </div>
 
-<mat-divider [inset]="true" *ngIf="!last"></mat-divider>
+<mat-divider [inset]="true" *ngIf="!last && adminView"></mat-divider>
