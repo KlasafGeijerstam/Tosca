@@ -58,7 +58,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Workspace'
-  /{workspace_id}/queues:
+  /workspaces/{workspace_id}/queues:
     get:
       tags:
         - queues
@@ -74,6 +74,23 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/ID'
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Queue'
+  /queues:
+    get:
+      tags:
+        - queues
+      operationId: getAllQueues
+      security:
+        - bearerAuth: []
+      description: Gets all queues
       responses:
         200:
           description: success
