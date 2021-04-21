@@ -61,8 +61,7 @@ mat-card-actions {
 
 .mat-fab-bottom-right mat-icon {
   margin-left: -1rem;
-  line-height: inherit;
-  vertical-align: text-bottom;
+  vertical-align: middle;
 }
 
 .workspace-desc {
