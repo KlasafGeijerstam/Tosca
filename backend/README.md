@@ -4,8 +4,6 @@ using Docker.
 
 * `docker`
 * `docker-compose`
-* `rust` >= 1.51
-* `diesel`
 
 A development environment can be set up by running the following commands:
 * `./setup.sh`
