@@ -10,54 +10,54 @@ use serde::{Deserialize, Serialize};
 #[derive(Identifiable, Queryable, Associations, Debug, Deserialize, Serialize)]
 #[belongs_to(Workspace)]
 pub struct Signup {
-    id: i32,
-    workspace_id: i32,
-    max_slot_signup: i32,
-    name: String,
-    info: String,
+    pub id: i32,
+    pub workspace_id: i32,
+    pub max_slot_signup: i32,
+    pub name: String,
+    pub info: String,
 }
 
 #[derive(Insertable, Serialize, Deserialize, AsChangeset)]
 #[table_name = "signups"]
 pub struct NewSignup<'a> {
-    workspace_id: i32,
-    max_slot_signup: i32,
-    name: &'a str,
-    info: &'a str,
+    pub workspace_id: i32,
+    pub max_slot_signup: i32,
+    pub name: &'a str,
+    pub info: &'a str,
 }
 
 #[derive(Identifiable, Queryable, Associations, Debug, Deserialize, Serialize)]
 #[belongs_to(Signup)]
 pub struct SignupSlot {
-    id: i32,
-    signup_id: i32,
-    info: String,
-    time: Option<NaiveDateTime>,
-    max_users: i32,
+    pub id: i32,
+    pub signup_id: i32,
+    pub info: String,
+    pub time: Option<NaiveDateTime>,
+    pub max_users: i32,
 }
 
 #[derive(Insertable, Serialize, Deserialize, AsChangeset)]
 #[table_name = "signup_slots"]
 pub struct NewSignupSlot<'a> {
-    signup_id: i32,
-    info: &'a str,
-    time: Option<NaiveDateTime>,
-    max_users: i32,
+    pub signup_id: i32,
+    pub info: &'a str,
+    pub time: Option<NaiveDateTime>,
+    pub max_users: i32,
 }
 
 #[derive(Insertable, Serialize, Deserialize, AsChangeset)]
 #[table_name = "signup_slot_users"]
 pub struct NewSignupSlotUser<'a> {
-    signup_slot_id: i32,
-    user_id: &'a str,
+    pub signup_slot_id: i32,
+    pub user_id: &'a str,
 }
 
 #[derive(Identifiable, Queryable, Associations, Debug, Deserialize, Serialize)]
 #[belongs_to(SignupSlot)]
 #[primary_key("signup_slot_id", "user_id")]
 pub struct SignupSlotUser {
-    signup_slot_id: i32,
-    user_id: String,
+    pub signup_slot_id: i32,
+    pub user_id: String,
 }
 
 pub fn get_signups(con: &DbConnection, workspace_id: i32) -> Result<Vec<Signup>> {

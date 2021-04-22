@@ -8,10 +8,9 @@ using Docker.
 * `diesel`
 
 A development environment can be set up by running the following commands:
+* `./setup.sh`
 * `docker-compose build`
+* `./seed_db.sh`
 * `docker-compose up`
 
-And then:
-* `cd` to the `web/web_backend/db_connector` directory.
-* Move the `.env.example` file to `.env` (`mv .env.example .env`)
-* Run the database migrations using: `diesel migration run`
+A development environment with a seeded database should now be up and running.

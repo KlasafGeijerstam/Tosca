@@ -1,27 +1,47 @@
 version: "3.9"
 services:
-    dev-login-provider:
-        build: login/dev_login/
+    tosca_base:
+        build: .
+    dev_login_provider:
+        image: backend_tosca_base
+        depends_on:
+            - tosca_base
         ports:
             - "9000:9000"
-        command: ["9000", "https://localhost"]
-    dev-user-provider:
-        build: user/toml_provider/
+        command: ["dev_login", "9000", "https://localhost"]
+    dev_user_provider:
+        image: backend_tosca_base
+        depends_on: 
+            - tosca_base
         ports:
             - "8000:8000"
-        command: ["8000"]
-    
+        volumes:
+            - ./user/toml_provider/res:/app
+        command: ["toml_provider", "/app/seed_db.toml", "8000"]
+    database_migration:
+        build: web/web_backend/db_connector
+        depends_on:
+            - database
+        environment:
+            DATABASE_URL: "postgresql://${PG_USER:?}:${PG_PASSWORD:?}@database:${PG_PORT:?}/${PG_DB}"
     database:
         image: postgres
         ports:
-            - "5432:5432"
+            - "${PG_PORT:?}:${PG_PORT:?}"
         environment:
-            POSTGRES_PASSWORD: "1234"
-    web-backend:
-        build: web/web_backend/
+            POSTGRES_PASSWORD: "${PG_PASSWORD:?}"
+        volumes:
+            - ./pg_data:/var/lib/postgresql/data
+    web_backend:
+        image: backend_tosca_base
         depends_on:
-            - dev-login-provider
-            - dev-user-provider
+            - tosca_base
+            - dev_login_provider
+            - dev_user_provider
             - database
         ports:
             - "25674:25674" 
+        volumes:
+            - ./web/web_backend:/app
+        working_dir: /app
+        command: ["web_backend", "config_docker.toml"]
