@@ -1,41 +1,9 @@
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 use structopt::StructOpt;
-
+use user_format::*;
 use actix_web::{get, web, web::Path, App, HttpResponse, HttpServer};
 
-#[derive(Deserialize)]
-struct Config {
-    users: HashMap<String, User>,
-    workspaces: HashMap<String, Workspace>,
-}
-
-#[derive(Deserialize, Serialize, Clone)]
-struct User {
-    first_name: String,
-    last_name: String,
-    user_level: u8,
-}
-
-#[derive(Deserialize, Serialize, Clone, Debug)]
-struct UserWithID {
-    user_id: String,
-    first_name: String,
-    last_name: String,
-    user_level: u8,
-    workspaces: Vec<String>,
-}
-
-#[derive(Deserialize, Serialize, Clone)]
-struct Workspace {
-    users: Vec<String>,
-}
-
-#[derive(Serialize)]
-struct UserWorkspace {
-    workspace_id: String,
-}
 
 #[derive(StructOpt)]
 struct Arguments {

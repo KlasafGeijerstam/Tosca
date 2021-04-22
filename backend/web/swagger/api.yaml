@@ -108,7 +108,7 @@ components:
   schemas:
     ID:
       type: integer
-      format: in32
+      format: int32
     Workspace:
       type: object
       properties:
@@ -118,6 +118,9 @@ components:
           type: string
         info:
           type: string
+        remote_workspace_id:
+            type: string
+            nullable: true
         creator:
           $ref: '#/components/schemas/User'
         moderators:

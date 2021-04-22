@@ -28,17 +28,18 @@ pub struct NewQueue<'a> {
 #[derive(Identifiable, Queryable, Associations, Debug, Deserialize, Serialize)]
 #[belongs_to(Queue)]
 pub struct QueueSlot {
-    id: i32,
-    queue_id: i32,
+    pub id: i32,
+    pub queue_id: i32,
     #[serde(with = "ts_seconds")]
-    start_time: NaiveDateTime,
-    duration: i32,
-    open_before: i32,
+    pub start_time: NaiveDateTime,
+    pub duration: i32,
+    pub open_before: i32,
 }
 
 #[derive(Insertable, Debug, Deserialize, Serialize, AsChangeset)]
 #[table_name = "queue_slots"]
 pub struct NewQueueSlot {
+    pub queue_id: i32,
     #[serde(with = "ts_seconds")]
     pub start_time: NaiveDateTime,
     pub duration: i32,
@@ -49,12 +50,12 @@ pub struct NewQueueSlot {
 #[primary_key("queue_slot_user", "user_id")]
 #[belongs_to(QueueSlot)]
 pub struct QueueSlotUser {
-    queue_slot_id: i32,
-    user_id: String,
-    message: String,
-    moderator_message: String,
+    pub queue_slot_id: i32,
+    pub user_id: String,
+    pub message: String,
+    pub moderator_message: String,
     #[serde(with = "ts_seconds")]
-    q_time: NaiveDateTime,
+    pub q_time: NaiveDateTime,
 }
 
 #[derive(Insertable, Debug, Deserialize, Serialize, AsChangeset)]

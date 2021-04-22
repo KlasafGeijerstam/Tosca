@@ -707,6 +707,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "fake"
+version = "2.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "704749d52f737f28d7a632d4608db4005822efbb5a1c673c159f1193c9e63832"
+dependencies = [
+ "rand 0.8.3",
+]
+
+[[package]]
 name = "flate2"
 version = "1.0.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1597,6 +1606,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "progressing"
+version = "3.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "97b7db19a74ba7c34de36558abed080568491d2b8999a34de914b1793b0b4b1b"
+dependencies = [
+ "log",
+]
+
+[[package]]
 name = "quick-error"
 version = "1.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1891,6 +1909,20 @@ checksum = "e3042af939fca8c3453b7af0f1c66e533a15a86169e39de2657310ade8f98d3c"
 dependencies = [
  "ring",
  "untrusted",
+]
+
+[[package]]
+name = "seed_db"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "db_connector",
+ "fake",
+ "progressing",
+ "rand 0.8.3",
+ "structopt",
+ "toml",
+ "user_format",
 ]
 
 [[package]]
@@ -2361,9 +2393,9 @@ version = "0.1.0"
 dependencies = [
  "actix-web",
  "pretty_env_logger",
- "serde",
  "structopt",
  "toml",
+ "user_format",
 ]
 
 [[package]]
@@ -2532,6 +2564,14 @@ dependencies = [
  "idna",
  "matches",
  "percent-encoding",
+]
+
+[[package]]
+name = "user_format"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "toml",
 ]
 
 [[package]]

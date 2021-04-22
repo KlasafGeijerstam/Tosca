@@ -74,6 +74,7 @@ table! {
         creator -> Text,
         name -> Text,
         info -> Text,
+        remote_workspace_id -> Nullable<Text>,
     }
 }
 

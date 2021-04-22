@@ -13,6 +13,7 @@ pub struct Workspace {
     pub creator: String,
     pub name: String,
     pub info: String,
+    pub remote_workspace_id: Option<String>,
 }
 
 #[derive(Insertable, Debug, Deserialize, Serialize, AsChangeset)]
@@ -21,6 +22,7 @@ pub struct NewWorkspace<'a> {
     pub creator: &'a str,
     pub name: &'a str,
     pub info: &'a str,
+    pub remote_workspace_id: Option<&'a str>,
 }
 
 #[derive(Identifiable, Queryable, Associations, Insertable, Debug)]

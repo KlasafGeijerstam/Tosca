@@ -3,6 +3,8 @@ members = [
     "login/dev_login",
     "login/oidc",
     "user/toml_provider",
+    "user/toml_provider/user_format",
     "web/web_backend",
     "web/web_backend/db_connector",
+    "seed_db"
 ]
