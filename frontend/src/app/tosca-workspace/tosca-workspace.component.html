@@ -2,22 +2,11 @@
   <h1 mat-dialog-title> {{ workspace.name }}</h1>
   <p class="info">{{ workspace.info }}</p>
 
-  <mat-card>
-    <mat-list>
-      <mat-list-item><a href="queues">Queue 1</a></mat-list-item>
-      <mat-divider [inset]="true"></mat-divider>
-      <mat-list-item><a href="queues">Queue 2</a></mat-list-item>
-      <mat-divider [inset]="true"></mat-divider>
-      <mat-list-item><a href="queues">Queue 3</a></mat-list-item>
-
-      <mat-divider></mat-divider>
-      <mat-list-item><a href="signups">Signup 1</a></mat-list-item>
-      <mat-divider [inset]="true"></mat-divider>
-      <mat-list-item><a href="signups">Signup 2</a></mat-list-item>
-      <mat-divider [inset]="true"></mat-divider>
-      <mat-list-item><a href="signups">Signup 3</a></mat-list-item>
-    </mat-list>
-  </mat-card>
+  <mat-nav-list>
+    <a mat-list-item href="queues"><mat-icon color="primary">people</mat-icon> Tutoring</a>
+    <a mat-list-item href="queues"><mat-icon color="primary">people</mat-icon> Examination</a>
+    <a mat-list-item href="signups"><mat-icon color="primary">groups</mat-icon> Project Groups</a>
+  </mat-nav-list>
 
 </mat-dialog-content>
 <mat-dialog-actions align="end">
