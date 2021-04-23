@@ -8,6 +8,8 @@ using Docker.
 * `diesel`
 
 A development environment can be set up by running the following commands:
+Copy the `.env.example` to `.env` and modify it if needed.
+
 * `./setup.sh`
 * `docker-compose build`
 * `./seed_db.sh`
