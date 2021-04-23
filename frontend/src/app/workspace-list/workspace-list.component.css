@@ -70,5 +70,9 @@ mat-card-actions {
 .workspace-desc {
   white-space: pre-wrap;
   max-height: 12rem;
-  overflow: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
 }

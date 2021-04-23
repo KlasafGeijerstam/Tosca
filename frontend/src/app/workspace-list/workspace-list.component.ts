@@ -53,7 +53,7 @@ export class WorkspaceListComponent implements OnInit {
   }
 
   onFocusWorkspace(workspace: Workspace): void {
-    const dialogRef = this.dialog.open(ToscaWorkspaceComponent, { data: workspace });
+    const dialogRef = this.dialog.open(ToscaWorkspaceComponent, { data: workspace, autoFocus: false });
     dialogRef.updateSize('75%');
   }
 }

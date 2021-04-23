@@ -2,7 +2,15 @@ mat-card {
   margin: 0 0 2em 0;
 }
 
+h1 {
+  color: var(--tosca-primary-color);
+}
+
 .info {
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
+}
+
+a mat-icon {
+  margin: 0 1rem 0 0;
 }
