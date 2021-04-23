@@ -24,6 +24,8 @@ services:
             - database
         environment:
             DATABASE_URL: "postgresql://${PG_USER:?}:${PG_PASSWORD:?}@database:${PG_PORT:?}/${PG_DB}"
+        volumes:
+            - ./web/web_backend/db_connector:/app
     database:
         image: postgres
         ports:

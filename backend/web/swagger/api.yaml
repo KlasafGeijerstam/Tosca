@@ -10,13 +10,13 @@ externalDocs:
   description: Find out more about Swagger
   url: https://github.com/KlasafGeijerstam/Tosca
 servers:
-- url: https://localhost/api
-- url: http://example.com/api
+  - url: https://localhost:25674/api
+  - url: http://example.com/api
 tags:
-- name: workspaces
-  description: All workspace related endpoints
-- name: queues
-  description: Queue related endpoints
+  - name: workspaces
+      description: All workspace related endpoints
+  - name: queues
+      description: Queue related endpoints
 paths:
   /workspaces:
     get:

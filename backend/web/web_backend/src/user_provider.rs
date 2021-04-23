@@ -74,11 +74,7 @@ pub struct UserProvider {
 }
 
 impl UserProvider {
-    ///! TODO
     ///! Wraps a Tosca user provider.
-    ///!
-    ///! TODO: GET /workspaces/{workspace\_id}
-    ///! TODO: GET /workspaces
 
     /// Creates a new `UserProvider` with a given Tosca UserProvider host.
     pub fn new(api_host: &str) -> Self {
@@ -87,6 +83,12 @@ impl UserProvider {
             api_host: api_host.into(),
             cache: Cache::<User>::builder().with_max_size(1_000).build(),
         }
+    }
+
+
+    /// Gets a user from a user id
+    pub async fn get(&self, user_id: &str) -> anyhow::Result<Arc<User>> {
+        Ok(self.get_user::<NORMAL_USER>(user_id).await?.user)
     }
 
     /// Gets UserData for a user_id. Returns `Err` if the user does not exist,
