@@ -65,7 +65,7 @@ async fn add_workspace(
 
     let result = web::block(move || {
         let workspace = workspace::NewWorkspace {
-            creator: &user.user_id,
+            creator: &user.user_id(),
             info: &wspace.info,
             name: &wspace.name,
             remote_workspace_id: wspace.remote_workspace_id.as_ref().map(|x| x.as_str()),

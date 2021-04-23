@@ -28,7 +28,7 @@ features = ["derive"]
 
 [dependencies.tokio]
 version = "0.3"
-features = ["sync"]
+features = ["sync", "macros", "rt-multi-thread"]
 
 [dependencies.reqwest]
 version = "0.10"
