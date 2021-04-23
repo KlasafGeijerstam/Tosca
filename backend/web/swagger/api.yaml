@@ -14,9 +14,9 @@ servers:
   - url: http://example.com/api
 tags:
   - name: workspaces
-      description: All workspace related endpoints
+    description: All workspace related endpoints
   - name: queues
-      description: Queue related endpoints
+    description: Queue related endpoints
 paths:
   /workspaces:
     get:
@@ -128,7 +128,7 @@ components:
         whitelist:
           $ref: '#/components/schemas/UserArray'
         queues:
-          $ref: '#/components/schemas/Queue'
+          $ref: '#/components/schemas/QueueArray'
     User:
       type: object
       properties:
@@ -151,6 +151,10 @@ components:
           type: string
         info:
           type: string
+    QueueArray:
+        type: array
+        items:
+            $ref: '#/components/schemas/Queue'
     QueueWithSlots:
       type: object
       allOf:
