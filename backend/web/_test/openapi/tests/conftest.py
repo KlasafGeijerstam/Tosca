@@ -5,26 +5,25 @@ from openapi_core import create_spec
 from openapi_spec_validator import validate_spec
 from openapi_spec_validator.readers import read_from_filename
 import openapi_core
+import pytest
 from requests import Request, Session
 from requests import PreparedRequest
 from pathlib import Path
+from os import environ
 import yaml
 
-
-spec_dict, spec_url = read_from_filename('../../swagger/api.yaml')
+OPENAPI_SPEC = environ['OPENAPI_SPEC']
+spec_dict, spec_url = read_from_filename(OPENAPI_SPEC)
 validate_spec(spec_dict)
 
 api_spec = create_spec(spec_dict)
 
 BASE = 'https://localhost:25674/api'
 AUTH = {"Authorization": "Bearer token_admin"}
-GET = 'GET'
-POST = 'POST'
-DELETE = 'DELETE'
 
 session = Session()
 
-def make_request(method: str, url: str, body: dict = None):
+def request(method: str, url: str, body: dict = None):
 
     request = Request(method, BASE + url, headers=AUTH)
     if body is not None:
@@ -40,6 +39,8 @@ def make_request(method: str, url: str, body: dict = None):
     validator = ResponseValidator(api_spec)
     result = validator.validate(openapi_request, openapi_response)
 
-    print(result.errors)
+    if result.errors != []:
+        print(result.errors)
 
-make_request(GET, '/workspaces')
+    assert result.errors == []
+
