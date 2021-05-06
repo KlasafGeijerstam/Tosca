@@ -24,7 +24,7 @@ features = ["rustls"]
 
 [dependencies.serde]
 version = "1"
-features = ["derive"]
+features = ["derive", "rc"]
 
 [dependencies.tokio]
 version = "0.3"

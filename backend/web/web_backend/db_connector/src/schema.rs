@@ -71,7 +71,7 @@ table! {
 table! {
     workspaces (id) {
         id -> Int4,
-        creator -> Text,
+        creator_user_id -> Text,
         name -> Text,
         info -> Text,
         remote_workspace_id -> Nullable<Text>,

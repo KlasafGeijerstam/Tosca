@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Identifiable, Queryable, Debug, Deserialize, Serialize)]
 pub struct Workspace {
     pub id: i32,
-    pub creator: String,
+    pub creator_user_id: String,
     pub name: String,
     pub info: String,
     pub remote_workspace_id: Option<String>,
@@ -19,7 +19,7 @@ pub struct Workspace {
 #[derive(Insertable, Debug, Deserialize, Serialize, AsChangeset)]
 #[table_name = "workspaces"]
 pub struct NewWorkspace<'a> {
-    pub creator: &'a str,
+    pub creator_user_id: &'a str,
     pub name: &'a str,
     pub info: &'a str,
     pub remote_workspace_id: Option<&'a str>,

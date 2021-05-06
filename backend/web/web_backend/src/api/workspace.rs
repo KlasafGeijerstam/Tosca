@@ -1,13 +1,18 @@
-use super::DbPool;
+use super::{DbPool, UserProvider};
+use crate::user_provider::user_field::UserField;
+use crate::user_provider::{AdminUser, NormalUser};
 use actix_web::{get, post, web, web::Json, Error, HttpResponse};
-use db_connector::{queue::get_queues, queue::Queue, workspace, workspace::Workspace};
+use db_connector::{
+    queue::get_queues, queue::Queue, workspace, workspace::Workspace as DBWorkspace,
+};
 use log::error;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
 struct RestWorkspace {
     #[serde(flatten)]
-    workspace: Workspace,
+    workspace: DBWorkspace,
+    creator: UserField,
     queues: Vec<Queue>,
 }
 
@@ -19,19 +24,22 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
     );
 }
 
-use crate::user_provider::{AdminUser, NormalUser};
-
 #[get("")]
-async fn get_workspaces(db_pool: DbPool, _user: NormalUser) -> Result<HttpResponse, Error> {
+async fn get_workspaces(
+    db_pool: DbPool,
+    _user: NormalUser,
+    user_provider: UserProvider,
+) -> Result<HttpResponse, Error> {
     let con = db_pool
         .get()
         .expect("Failed to get database handle from pool");
-    let workspaces = web::block(move || {
+    let mut workspaces = web::block(move || {
         workspace::get_workspaces(&con)?
             .drain(..)
             .map(|workspace| {
                 Ok(RestWorkspace {
                     queues: get_queues(&con, workspace.id)?,
+                    creator: workspace.creator_user_id.clone().into(),
                     workspace,
                 })
             })
@@ -42,6 +50,10 @@ async fn get_workspaces(db_pool: DbPool, _user: NormalUser) -> Result<HttpRespon
         error!("Failed to load workspaces: {:?}", e);
         HttpResponse::InternalServerError().finish()
     })?;
+
+    for workspace in workspaces.iter_mut() {
+        workspace.creator.lookup(&user_provider).await?;
+    }
 
     Ok(HttpResponse::Ok().json(workspaces))
 }
@@ -65,7 +77,7 @@ async fn add_workspace(
 
     let result = web::block(move || {
         let workspace = workspace::NewWorkspace {
-            creator: &user.user_id(),
+            creator_user_id: &user.user_id(),
             info: &wspace.info,
             name: &wspace.name,
             remote_workspace_id: wspace.remote_workspace_id.as_ref().map(|x| x.as_str()),

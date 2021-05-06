@@ -18,6 +18,7 @@ services:
         volumes:
             - ./user/toml_provider/res:/app
         command: ["toml_provider", "/app/seed_db.toml", "8000"]
+
     database_migration:
         build: web/web_backend/db_connector
         depends_on:

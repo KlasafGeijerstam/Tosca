@@ -111,7 +111,7 @@ fn main() {
             let wspace = NewWorkspace {
                 name,
                 info: &Paragraph(20..100).fake::<String>(),
-                creator: &admins.random().user_id,
+                creator_user_id: &admins.random().user_id,
                 remote_workspace_id: Some(name),
             };
 

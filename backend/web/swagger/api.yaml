@@ -111,6 +111,11 @@ components:
       format: int32
     Workspace:
       type: object
+      required:
+          - id
+          - info
+          - creator
+          - queues
       properties:
         id:
           $ref: '#/components/schemas/ID'
@@ -121,6 +126,8 @@ components:
         remote_workspace_id:
             type: string
             nullable: true
+        creator_user_id:
+            type: string
         creator:
           $ref: '#/components/schemas/User'
         moderators:

@@ -10,7 +10,7 @@ use anyhow::Result;
 use futures::Future;
 use log::debug;
 use reqwest::Client;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::pin::Pin;
 use std::sync::Arc;
 
@@ -25,38 +25,43 @@ pub type SuperUser = UserData<SUPER_USER>;
 
 #[derive(Debug)]
 pub struct UserData<const LEVEL: usize> {
-    user: Arc<User>,
+    user: Arc<(User, Workspaces)>,
 }
 
 impl<const LEVEL: usize> UserData<LEVEL> {
     pub fn user_id(&self) -> &str {
-        &self.user.user_id
+        &self.user.0.user_id
     }
 
     pub fn first_name(&self) -> &str {
-        &self.user.first_name
+        &self.user.0.first_name
     }
 
     pub fn last_name(&self) -> &str {
-        &self.user.last_name
+        &self.user.0.last_name
     }
 
     pub fn level(&self) -> usize {
-        self.user.user_level
+        self.user.0.user_level
+    }
+
+    pub fn user(&self) -> &User {
+        &self.user.0
     }
 
     pub fn workspaces(&self) -> &Vec<String> {
-        &self.user.workspaces
+        &self.user.1
     }
 }
 
-#[derive(Debug)]
+pub type Workspaces = Vec<String>;
+
+#[derive(Serialize, Clone, Debug)]
 pub struct User {
     pub user_id: String,
     pub first_name: String,
     pub last_name: String,
     pub user_level: usize,
-    pub workspaces: Vec<String>,
 }
 
 /// Maps to data received from LoginProvider
@@ -70,7 +75,7 @@ struct RemoteUser {
 pub struct UserProvider {
     client: Client,
     api_host: String,
-    cache: Cache<User>,
+    cache: Cache<(User, Workspaces)>,
 }
 
 impl UserProvider {
@@ -81,13 +86,14 @@ impl UserProvider {
         UserProvider {
             client: Client::new(),
             api_host: api_host.into(),
-            cache: Cache::<User>::builder().with_max_size(1_000).build(),
+            cache: Cache::<(User, Workspaces)>::builder()
+                .with_max_size(1_000)
+                .build(),
         }
     }
 
-
     /// Gets a user from a user id
-    pub async fn get(&self, user_id: &str) -> anyhow::Result<Arc<User>> {
+    pub async fn get(&self, user_id: &str) -> anyhow::Result<Arc<(User, Workspaces)>> {
         Ok(self.get_user::<NORMAL_USER>(user_id).await?.user)
     }
 
@@ -97,23 +103,25 @@ impl UserProvider {
         &self,
         user_id: &str,
     ) -> anyhow::Result<UserData<LEVEL>> {
-        let user = self.get_user_from_provider(user_id).await?;
+        let uw = self.get_user_from_provider(user_id).await?;
 
         let required_level = LEVEL;
 
-        if user.user_level > required_level {
+        if uw.0.user_level > required_level {
             bail!(
                 "User lacks permissions. Required: {}, actual: {}",
                 required_level,
-                user.user_level
+                uw.0.user_level
             )
         }
 
-        Ok(UserData { user })
+        Ok(UserData { user: uw })
     }
 
-    /// TODO: Make UserProvider actually use a configured user provider to fetch data
-    async fn get_user_from_provider(&self, user_id: &str) -> anyhow::Result<Arc<User>> {
+    async fn get_user_from_provider(
+        &self,
+        user_id: &str,
+    ) -> anyhow::Result<Arc<(User, Workspaces)>> {
         if let Some(response) = self.cache.lookup(user_id.into()).await {
             return Ok(response.clone());
         }
@@ -126,15 +134,15 @@ impl UserProvider {
             .json()
             .await?;
 
+        let workspaces = user.workspaces;
         let user = User {
             user_id: user_id.into(),
             first_name: user.first_name,
             last_name: user.last_name,
             user_level: user.user_level,
-            workspaces: user.workspaces,
         };
 
-        Ok(self.cache.store(user_id, user).await)
+        Ok(self.cache.store(user_id, (user, workspaces)).await)
     }
 }
 
@@ -186,5 +194,53 @@ impl<const LEVEL: usize> FromRequest for UserData<LEVEL> {
                 )
             }
         }
+    }
+}
+
+pub mod user_field {
+    use super::{NORMAL_USER, User};
+    use crate::api::UserProvider;
+    use actix_web::{Error, HttpResponse};
+    use log::error;
+    use serde::Serialize;
+
+    use UserField::*;
+
+    pub async fn lookup(user_id: &str, user_provider: &UserProvider) -> anyhow::Result<User> {
+        Ok(user_provider.get(user_id).await?.0.clone())
+    }
+
+    #[derive(Serialize, Debug)]
+    #[serde(untagged)]
+    pub enum UserField {
+        Username(String),
+        FullUser(User),
+    }
+
+    impl From<String> for UserField {
+        fn from(user_id: String) -> Self {
+            Username(user_id)
+        }
+    }
+
+    impl UserField {
+        pub async fn lookup(&mut self, user_provider: &UserProvider) -> Result<(), Error> {
+            if let Username(user_id) = &self {
+                *self = FullUser(lookup(&user_id, &user_provider).await.map_err(|e| {
+                    error!("Failed to lookup user: {:?}", e);
+                    HttpResponse::InternalServerError().finish()
+                })?);
+            }
+            Ok(())
+        }
+    }
+    
+    pub fn unknown_user() -> UserField {
+        FullUser(User {
+            user_id: "unknown_user".into(),
+            first_name: "Unkown".into(),
+            last_name: "User".into(),
+            user_level: NORMAL_USER,
+        })
     }
 }
