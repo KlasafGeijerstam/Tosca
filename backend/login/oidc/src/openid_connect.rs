@@ -9,9 +9,9 @@ use std::collections::HashMap;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use tokio::sync::RwLock;
 
-use crate::OpenIDProviderConfig;
+use crate::OpenIdProviderConfig;
 
-/// JWKS should be reloaded once every 24 hours to account for
+/// Jwks should be reloaded once every 24 hours to account for
 /// rotating keys and new keys.
 const JWKS_RELOAD_TIME: Duration = Duration::from_secs(60 * 60 * 24);
 
@@ -19,7 +19,7 @@ const JWKS_RELOAD_TIME: Duration = Duration::from_secs(60 * 60 * 24);
 const NONCE_EXPIRY: Duration = Duration::from_secs(60 * 60);
 
 #[derive(Deserialize, Debug)]
-pub struct OpenIDCallbackInfo {
+pub struct OpenIdCallbackInfo {
     pub state: String,
     pub code: String,
     pub scope: String,
@@ -50,12 +50,12 @@ pub struct Claims {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct JWKS {
-    keys: Vec<JWTKey>,
+pub struct Jwks {
+    keys: Vec<JwtKey>,
 }
 
-impl JWKS {
-    pub fn get_key(&self, kid: &str) -> Option<&JWTKey> {
+impl Jwks {
+    pub fn get_key(&self, kid: &str) -> Option<&JwtKey> {
         for key in &self.keys {
             if key.kid == kid {
                 return Some(key);
@@ -67,7 +67,7 @@ impl JWKS {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct JWTKey {
+pub struct JwtKey {
     kid: String,
     alg: String,
     n: String,
@@ -93,20 +93,20 @@ pub struct Session {
     claims: Claims,
 }
 
-pub struct OpenIDProvider {
-    config: OpenIDProviderConfig,
+pub struct OpenIdProvider {
+    config: OpenIdProviderConfig,
     nonces: RwLock<HashMap<String, SystemTime>>,
     session_tokens: RwLock<HashMap<String, Session>>,
     pre_auth_tokens: RwLock<HashMap<String, SystemTime>>,
-    jwks: RwLock<JWKS>,
+    jwks: RwLock<Jwks>,
     last_jwks_load: SystemTime,
 }
 
-impl OpenIDProvider {
-    /// Creates a new OpenIDProvider with the provided configuration
-    pub async fn new(config: OpenIDProviderConfig) -> Result<Self> {
+impl OpenIdProvider {
+    /// Creates a new OpenIdProvider with the provided configuration
+    pub async fn new(config: OpenIdProviderConfig) -> Result<Self> {
         let jwks = config.load_jwks().await?;
-        Ok(OpenIDProvider {
+        Ok(OpenIdProvider {
             config,
             nonces: RwLock::new(HashMap::new()),
             session_tokens: RwLock::new(HashMap::new()),
@@ -127,11 +127,11 @@ impl OpenIDProvider {
         Ok(())
     }
 
-    /// Generate an OpenID login link
+    /// Generate an OpenId login link
     /// Generates a link with embedded state and nonce, with]
     /// a specified callback uri.
     ///
-    /// The callback uri must be approved in the OIDC providers
+    /// The callback uri must be approved in the OIdC providers
     /// API.
     pub async fn get_login_link(&self, callback_uri: &str) -> String {
         let state_token = generate_random_string(30);
@@ -210,7 +210,7 @@ impl OpenIDProvider {
         let jwks = &*self.jwks.read().await;
         let key = jwks
             .get_key(kid)
-            .ok_or_else(|| anyhow!("Missing key in JWKS"))?;
+            .ok_or_else(|| anyhow!("Missing key in Jwks"))?;
         let key = DecodingKey::from_rsa_components(&key.n, &key.e);
 
         Ok(decode::<Claims>(jwt, &key, &Validation::new(header.alg))?.claims)
@@ -224,11 +224,11 @@ impl OpenIDProvider {
         }
     }
 
-    /// Verifies an OIDC login callback and retuns the session tokend and TTL for the session.
-    /// Checks state and nonces. Trades code for ID-token.
+    /// Verifies an OIdC login callback and retuns the session tokend and TTL for the session.
+    /// Checks state and nonces. Trades code for Id-token.
     pub async fn verify_callback(
         &self,
-        info: &OpenIDCallbackInfo,
+        info: &OpenIdCallbackInfo,
         callback_uri: &str,
     ) -> Result<(String, u64)> {
         match self.pre_auth_tokens.write().await.remove(&info.state) {
@@ -241,7 +241,7 @@ impl OpenIDProvider {
             .await?;
         let id_token = self.parse_jwt(&token_response.id_token).await?;
 
-        if let None = self.nonces.write().await.remove(&id_token.nonce) {
+        if self.nonces.write().await.remove(&id_token.nonce).is_none() {
             bail!("Invalid nonce, possibly a replay attack")
         }
 

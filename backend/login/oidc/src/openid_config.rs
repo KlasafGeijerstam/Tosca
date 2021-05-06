@@ -2,7 +2,7 @@ use anyhow::Result;
 use reqwest::{self, Client};
 use serde::Deserialize;
 
-use crate::JWKS;
+use crate::Jwks;
 
 #[derive(Deserialize, Debug)]
 struct DiscoveryFields {
@@ -27,21 +27,21 @@ struct ConfigFile {
 pub struct Config {
     pub public_host: String,
     pub port: u16,
-    pub provider: OpenIDProviderConfig,
+    pub provider: OpenIdProviderConfig,
     pub client_endpoint: String,
     pub certificate_file: String,
     pub key_file: String,
 }
 
-/// Represents a OpenIDProvider config file
+/// Represents a OpenIdProvider config file
 impl Config {
     /// Loads a Config from a TOML file.
     pub async fn from_config_file(path: &str) -> Result<Self> {
         let config: ConfigFile = toml::from_str(
-            &std::fs::read_to_string(path).expect("Failed to open OpenID Connect config file"),
+            &std::fs::read_to_string(path).expect("Failed to open OpenId Connect config file"),
         )?;
 
-        let provider = OpenIDProviderConfig::new(
+        let provider = OpenIdProviderConfig::new(
             &config.client_id,
             &config.client_secret,
             &config.discovery_server,
@@ -59,16 +59,16 @@ impl Config {
     }
 }
 
-pub struct OpenIDProviderConfig {
+pub struct OpenIdProviderConfig {
     pub discovery_server: String,
     pub client_id: String,
     pub client_secret: String,
     discovery_data: DiscoveryFields,
 }
 
-impl OpenIDProviderConfig {
-    /// Loads the JWKS from the JWKS server
-    pub async fn load_jwks(&self) -> Result<JWKS> {
+impl OpenIdProviderConfig {
+    /// Loads the Jwks from the Jwks server
+    pub async fn load_jwks(&self) -> Result<Jwks> {
         Ok(reqwest::get(&self.discovery_data.jwks_uri)
             .await?
             .json()
@@ -87,13 +87,13 @@ impl OpenIDProviderConfig {
         &self.discovery_data.jwks_uri
     }
 
-    /// Creates a new OpenIDProviderConfig
+    /// Creates a new OpenIdProviderConfig
     /// The config loads the discovery data from the provided discovery server URI.
     pub async fn new(client_id: &str, client_secret: &str, discovery_server: &str) -> Result<Self> {
         let client = Client::new();
         let fields: DiscoveryFields = client.get(discovery_server).send().await?.json().await?;
 
-        Ok(OpenIDProviderConfig {
+        Ok(OpenIdProviderConfig {
             client_id: client_id.into(),
             client_secret: client_secret.into(),
             discovery_data: fields,

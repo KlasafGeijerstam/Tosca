@@ -80,7 +80,7 @@ async fn add_workspace(
             creator_user_id: &user.user_id(),
             info: &wspace.info,
             name: &wspace.name,
-            remote_workspace_id: wspace.remote_workspace_id.as_ref().map(|x| x.as_str()),
+            remote_workspace_id: wspace.remote_workspace_id.as_deref()
         };
         workspace::add_workspace(&con, &workspace)
     })

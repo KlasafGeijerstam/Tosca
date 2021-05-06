@@ -122,8 +122,8 @@ impl UserProvider {
         &self,
         user_id: &str,
     ) -> anyhow::Result<Arc<(User, Workspaces)>> {
-        if let Some(response) = self.cache.lookup(user_id.into()).await {
-            return Ok(response.clone());
+        if let Some(response) = self.cache.lookup(user_id).await {
+            return Ok(response);
         }
 
         let user: RemoteUser = self

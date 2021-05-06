@@ -49,8 +49,8 @@ impl LoginProvider {
     /// Perform a (cached) lookup, converts a session token to a user-id
     /// TODO: Handle token expiration
     pub async fn lookup(&self, token: &str) -> Result<Arc<String>> {
-        if let Some(response) = self.cache.lookup(token.into()).await {
-            return Ok(response.clone());
+        if let Some(response) = self.cache.lookup(token).await {
+            return Ok(response);
         }
 
         debug!("LoginProvider: {} not in cache, performing lookup", token);

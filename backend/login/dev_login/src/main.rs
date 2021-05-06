@@ -92,7 +92,7 @@ async fn read_index(_: HttpRequest) -> impl Responder {
         .body(INDEX)
 }
 
-const INDEX: &'static str = r#"
+const INDEX: &str = r#"
 <html>
   <head>
     <meta charset="UTF-8">

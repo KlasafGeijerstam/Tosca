@@ -7,10 +7,10 @@ use std::io::BufReader;
 
 use serde::{Deserialize, Serialize};
 use structopt::StructOpt;
-use tosca_openid_provider::{Config, OpenIDCallbackInfo, OpenIDProvider};
+use tosca_openid_provider::{Config, OpenIdCallbackInfo, OpenIdProvider};
 
 #[derive(StructOpt)]
-#[structopt(name = "Tosca OpenID Connect provider")]
+#[structopt(name = "Tosca OpenId Connect provider")]
 struct Arguments {
     /// The config file (in TOML format)
     config_file: String,
@@ -19,7 +19,7 @@ struct Arguments {
 struct AppData {
     redirect_uri: String,
     client_endpoint: String,
-    provider: OpenIDProvider,
+    provider: OpenIdProvider,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -45,7 +45,7 @@ async fn token(token: web::Json<Token>, data: web::Data<AppData>) -> impl Respon
 
 #[get("/after_oidc")]
 async fn after_oidc(
-    resp: web::Query<OpenIDCallbackInfo>,
+    resp: web::Query<OpenIdCallbackInfo>,
     data: web::Data<AppData>,
 ) -> impl Responder {
     let claims = data
@@ -102,7 +102,7 @@ async fn main() -> std::io::Result<()> {
     let cfg = load_ssl_keys(&oidc_cfg);
 
     let provider = web::Data::new(AppData {
-        provider: OpenIDProvider::new(oidc_cfg.provider).await.unwrap(),
+        provider: OpenIdProvider::new(oidc_cfg.provider).await.unwrap(),
         redirect_uri: format!("{}/after_oidc", oidc_cfg.public_host),
         client_endpoint: oidc_cfg.client_endpoint,
     });
