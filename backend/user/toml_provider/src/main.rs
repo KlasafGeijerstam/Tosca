@@ -1,9 +1,8 @@
+use actix_web::{get, web, web::Path, App, HttpResponse, HttpServer};
 use std::collections::HashMap;
 use std::fs;
 use structopt::StructOpt;
 use user_format::*;
-use actix_web::{get, web, web::Path, App, HttpResponse, HttpServer};
-
 
 #[derive(StructOpt)]
 struct Arguments {

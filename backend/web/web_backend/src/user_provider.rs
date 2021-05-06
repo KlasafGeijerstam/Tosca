@@ -198,7 +198,7 @@ impl<const LEVEL: usize> FromRequest for UserData<LEVEL> {
 }
 
 pub mod user_field {
-    use super::{NORMAL_USER, User};
+    use super::{User, NORMAL_USER};
     use crate::api::UserProvider;
     use actix_web::{Error, HttpResponse};
     use log::error;
@@ -234,7 +234,7 @@ pub mod user_field {
             Ok(())
         }
     }
-    
+
     pub fn unknown_user() -> UserField {
         FullUser(User {
             user_id: "unknown_user".into(),

@@ -10,7 +10,7 @@ use fake::faker::lorem::en::*;
 use fake::faker::name::en::*;
 use fake::Fake;
 use rand::thread_rng;
-use rand::{RngCore, Rng};
+use rand::{Rng, RngCore};
 use std::collections::{HashMap, HashSet};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use user_format::UserWithID;
